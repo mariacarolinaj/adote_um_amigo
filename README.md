@@ -27,3 +27,10 @@ Documentação do slidy:
 
 > choco install slidy
 
+Comandos básicos do slidy:
+
+-- Gerar uma nova página do aplicativo: > slidy generate page <nome_pasta/nome_pagina> 
+
+-- Gerar um novo widget (para ser reutilizado em mais locais): > slidy generate widget <nome_pasta/nome_widget>
+
+    Exemplo: slidy generate page cadastros/cadastro-animal (basicamente: caminho/nome da página ou widget)
