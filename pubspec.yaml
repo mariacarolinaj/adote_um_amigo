@@ -75,17 +75,37 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
+
+  fonts:
+    - family: Jost
+      fonts:
+        - asset: fonts/Jost-Black.ttf
+        - asset: fonts/Jost-BlackItalic.ttf
+          style: italic
+        - asset: fonts/Jost-Bold.ttf
+        - asset: fonts/Jost-BoldItalic.ttf
+          style: italic
+        - asset: fonts/Jost-ExtraBold.ttf
+        - asset: fonts/Jost-ExtraBoldItalic.ttf
+          style: italic
+        - asset: fonts/Jost-ExtraLight.ttf
+        - asset: fonts/Jost-ExtraLightItalic.ttf
+          style: italic
+        - asset: fonts/Jost-Italic.ttf
+          style: italic
+        - asset: fonts/Jost-Light.ttf
+        - asset: fonts/Jost-LightItalic.ttf
+          style: italic
+        - asset: fonts/Jost-Medium.ttf
+        - asset: fonts/Jost-MediumItalic.ttf
+          style: italic
+        - asset: fonts/Jost-Regular.ttf
+        - asset: fonts/Jost-SemiBold.ttf
+        - asset: fonts/Jost-SemiBoldItalic.ttf
+          style: italic
+        - asset: fonts/Jost-Thin.ttf
+        - asset: fonts/Jost-ThinItalic.ttf
+          style: italic
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
