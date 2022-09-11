@@ -18,6 +18,7 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Padding(
         padding: const EdgeInsets.fromLTRB(16, 32, 16, 16),
         child: Column(
