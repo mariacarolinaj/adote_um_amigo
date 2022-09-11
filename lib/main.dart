@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
           titleSmall: TextStyle(
               color: Cores.titulo, fontSize: 16, fontStyle: FontStyle.normal),
           bodyMedium: TextStyle(
-              color: Cores.texto, fontSize: 14, fontStyle: FontStyle.normal),
+              color: Cores.texto, fontSize: 12, fontStyle: FontStyle.normal),
           bodySmall: TextStyle(
               color: Cores.texto, fontSize: 12, fontStyle: FontStyle.normal),
         ),
