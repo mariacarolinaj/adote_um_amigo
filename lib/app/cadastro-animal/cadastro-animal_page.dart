@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:adote_um_amigo/models/animal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../shared/style.dart';
 
 class CadastroAnimalPage extends StatefulWidget {
@@ -60,6 +63,7 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
           ),
           _buildFieldCaracteristicas(),
           _buildFieldVacinas(),
+          _buildImagePicker(),
           _buildButton(),
         ],
       ),
@@ -169,6 +173,85 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
         return null;
       },
     );
+  }
+
+  Widget _buildImagePicker() {
+    return TextButton(
+      onPressed: _buildPhotoSourceDialog,
+      child: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Icon(Icons.add_circle_outline_rounded,
+                color: Cores.textoBotaoSecundario),
+            Text(
+              '   Adicionar fotos',
+              style: TextStyle(color: Cores.textoBotaoSecundario, fontSize: 14),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _buildPhotoSourceDialog() async {
+    switch (await showDialog<bool>(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            title: const Text('Adicionar fotos'),
+            children: <Widget>[
+              SimpleDialogOption(
+                onPressed: () {
+                  Navigator.pop(context, true);
+                },
+                child: const Text('Abrir galeria'),
+              ),
+              SimpleDialogOption(
+                onPressed: () {
+                  Navigator.pop(context, false);
+                },
+                child: const Text('Abrir Câmera'),
+              ),
+            ],
+          );
+        })) {
+      case true:
+        _getFotoGaleria();
+        break;
+      case false:
+        _getFotoCamera();
+        break;
+      case null:
+        // dialog dismissed
+        break;
+    }
+  }
+
+  void _getFotoGaleria() async {
+    PickedFile? foto = await ImagePicker().getImage(
+      source: ImageSource.gallery,
+      maxWidth: 1800,
+      maxHeight: 1800,
+    );
+    if (foto != null) {
+      setState(() {
+        animal.fotos.add(File(foto.path));
+      });
+    }
+  }
+
+  void _getFotoCamera() async {
+    PickedFile? pickedFile = await ImagePicker().getImage(
+      source: ImageSource.camera,
+      maxWidth: 1800,
+      maxHeight: 1800,
+    );
+    if (pickedFile != null) {
+      setState(() {
+        animal.fotos.add(File(pickedFile.path));
+      });
+    }
   }
 
   Widget _buildButton() {

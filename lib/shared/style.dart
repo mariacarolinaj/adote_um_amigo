@@ -7,4 +7,5 @@ class Cores {
   static const titulo = Color.fromARGB(255, 82, 102, 90);
   static const texto = Color.fromARGB(255, 82, 102, 90);
   static const textoBotao = Colors.white;
+  static const textoBotaoSecundario = Color.fromARGB(255, 50, 183, 104);
 }
