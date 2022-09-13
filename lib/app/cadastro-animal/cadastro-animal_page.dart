@@ -18,21 +18,45 @@ class CadastroAnimalPage extends StatefulWidget {
 class CadastroAnimalPageState extends State<CadastroAnimalPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final CarouselController _buttonCarouselController = CarouselController();
-  int _carouselIndex = -1;
   final Animal _animal = Animal();
   File? _fotoAtualCarousel;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 32, 16, 16),
-        child: Column(
-          children: <Widget>[_buildTitulo(), _buildForm()],
-        ),
-      ),
-    );
+        resizeToAvoidBottomInset: false,
+        body: Padding(
+          padding: const EdgeInsets.all(16),
+          child: CustomScrollView(
+            slivers: [
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: Column(
+                  children: <Widget>[
+                    _buildTitulo(),
+                    Expanded(child: _buildForm()),
+                    _buildButton(),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ));
+
+    //   SingleChildScrollView(
+    //     child: Container(
+    //       padding: const EdgeInsets.fromLTRB(16, 32, 16, 16),
+    //       height: MediaQuery.of(context).size.height,
+    //       child: Column(
+    //         children: <Widget>[
+    //           _buildTitulo(),
+    //           _buildForm(),
+    //           _buildButton(),
+    //         ],
+    //       ),
+    //     ),
+    //   ),
+    // );
   }
 
   Widget _buildTitulo() {
@@ -69,7 +93,6 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
           _buildFieldVacinas(),
           if (_animal.fotos.isNotEmpty) _buildCarouselFotos(),
           _buildImagePicker(),
-          _buildButton(),
         ],
       ),
     );
@@ -181,19 +204,23 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
   }
 
   Widget _buildImagePicker() {
-    return TextButton(
-      onPressed: _animal.fotos.length < 5 ? _buildPhotoSourceDialog : null,
-      child: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Icon(Icons.add_circle_outline_rounded,
-                color: Cores.textoBotaoSecundario),
-            Text(
-              '   Adicionar foto',
-              style: TextStyle(color: Cores.textoBotaoSecundario, fontSize: 14),
-            )
-          ],
+    return Padding(
+      padding: const EdgeInsets.only(top: 24),
+      child: TextButton(
+        onPressed: _animal.fotos.length < 5 ? _buildPhotoSourceDialog : null,
+        child: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Icon(Icons.add_circle_outline_rounded,
+                  color: Cores.textoBotaoSecundario),
+              Text(
+                '   Adicionar foto',
+                style:
+                    TextStyle(color: Cores.textoBotaoSecundario, fontSize: 14),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -266,29 +293,32 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
   }
 
   Widget _buildCarouselFotos() {
-    return Column(children: <Widget>[
-      CarouselSlider(
-        options: CarouselOptions(
-          autoPlay: false,
-          enlargeCenterPage: true,
-          viewportFraction: 0.9,
-          aspectRatio: 2.0,
+    return Padding(
+      padding: const EdgeInsets.only(top: 32),
+      child: Column(children: <Widget>[
+        CarouselSlider(
+          options: CarouselOptions(
+            autoPlay: false,
+            enlargeCenterPage: true,
+            viewportFraction: 0.9,
+            aspectRatio: 2.0,
+          ),
+          carouselController: _buttonCarouselController,
+          items: _animal.fotos.map((foto) {
+            _fotoAtualCarousel = foto;
+            return Builder(
+              builder: (BuildContext context) {
+                return Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                  child: Image(image: FileImage(foto)),
+                );
+              },
+            );
+          }).toList(),
         ),
-        carouselController: _buttonCarouselController,
-        items: _animal.fotos.map((foto) {
-          _fotoAtualCarousel = foto;
-          return Builder(
-            builder: (BuildContext context) {
-              return Container(
-                margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                child: Image(image: FileImage(foto)),
-              );
-            },
-          );
-        }).toList(),
-      ),
-      _buildButtonBar(),
-    ]);
+        _buildButtonBar(),
+      ]),
+    );
   }
 
   Row _buildButtonBar() {
@@ -352,10 +382,7 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
           ),
           onPressed: () {
             if (_formKey.currentState!.validate()) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Processando os dados')),
-                // fazer upload
-              );
+              // fazer upload
             }
           },
         ),
