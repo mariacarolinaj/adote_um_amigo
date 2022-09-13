@@ -65,6 +65,7 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
   Widget _buildForm() {
     return Form(
       key: _formKey,
+      autovalidateMode: AutovalidateMode.always,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
