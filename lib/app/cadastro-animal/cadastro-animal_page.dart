@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:adote_um_amigo/models/animal.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -16,6 +17,8 @@ class CadastroAnimalPage extends StatefulWidget {
 
 class CadastroAnimalPageState extends State<CadastroAnimalPage> {
   final _formKey = GlobalKey<FormState>();
+  CarouselController buttonCarouselController = CarouselController();
+
   Animal animal = Animal();
 
   @override
@@ -63,6 +66,7 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
           ),
           _buildFieldCaracteristicas(),
           _buildFieldVacinas(),
+          if (animal.fotos.isNotEmpty) _buildCarouselFotos(),
           _buildImagePicker(),
           _buildButton(),
         ],
@@ -218,6 +222,8 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
         })) {
       case true:
         _getFotoGaleria();
+        print('------------------------------------------------------');
+        print(this.animal.fotos.first);
         break;
       case false:
         _getFotoCamera();
@@ -252,6 +258,32 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
         animal.fotos.add(File(pickedFile.path));
       });
     }
+  }
+
+  Widget _buildCarouselFotos() {
+    return CarouselSlider(
+      options: CarouselOptions(
+        autoPlay: false,
+        enlargeCenterPage: true,
+        viewportFraction: 0.9,
+        aspectRatio: 2.0,
+        initialPage: 2,
+      ),
+      carouselController: buttonCarouselController,
+      items: [1, 2, 3, 4, 5].map((i) {
+        return Builder(
+          builder: (BuildContext context) {
+            return Container(
+              // width: MediaQuery.of(context).size.width * 0.2,
+              // height: MediaQuery.of(context).size.height * 0.2,
+              margin: EdgeInsets.symmetric(horizontal: 5.0),
+              decoration: BoxDecoration(color: Colors.amber),
+              child: Image(image: FileImage(animal.fotos.first)),
+            );
+          },
+        );
+      }).toList(),
+    );
   }
 
   Widget _buildButton() {
