@@ -19,7 +19,7 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final CarouselController _buttonCarouselController = CarouselController();
   final Animal _animal = Animal();
-  File? _fotoAtualCarousel;
+  int _currentIndex = -1;
 
   @override
   Widget build(BuildContext context) {
@@ -318,10 +318,14 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
             enlargeCenterPage: true,
             viewportFraction: 0.9,
             aspectRatio: 2.0,
+            onPageChanged: (index, reason) {
+              setState(() {
+                _currentIndex = index;
+              });
+            },
           ),
           carouselController: _buttonCarouselController,
           items: _animal.fotos.map((foto) {
-            _fotoAtualCarousel = foto;
             return Builder(
               builder: (BuildContext context) {
                 return Container(
@@ -363,7 +367,7 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
           tooltip: 'Remover foto atual',
           onPressed: () {
             setState(() {
-              _animal.fotos.remove(_fotoAtualCarousel);
+              _animal.fotos.removeAt(_currentIndex);
             });
           },
         ),
