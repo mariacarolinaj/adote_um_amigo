@@ -1,8 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.adote_um_amigo">
+   <uses-permission android:name="android.permission.CAMERA" />
+   <uses-permission android:name="android.permission.FLASHLIGHT" />
    <application
         android:label="adote_um_amigo"
         android:name="${applicationName}"
+        android:requestLegacyExternalStorage="true"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

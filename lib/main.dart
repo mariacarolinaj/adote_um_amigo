@@ -1,7 +1,7 @@
 import 'package:adote_um_amigo/shared/rotas.dart';
 import 'package:adote_um_amigo/shared/style.dart';
 import 'package:flutter/material.dart';
-import 'app/cadastros/cadastro-animal_page.dart';
+import 'app/cadastro-animal/cadastro-animal_page.dart';
 
 void main() {
   runApp(const MyApp());
