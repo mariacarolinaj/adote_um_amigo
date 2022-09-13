@@ -18,8 +18,8 @@ class CadastroAnimalPage extends StatefulWidget {
 class CadastroAnimalPageState extends State<CadastroAnimalPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final CarouselController _buttonCarouselController = CarouselController();
-  int _carouselCurrentIndex = -1;
-  Animal _animal = Animal();
+  int _carouselIndex = -1;
+  final Animal _animal = Animal();
   File? _fotoAtualCarousel;
 
   @override
@@ -242,7 +242,9 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
     if (foto != null) {
       setState(() {
         _animal.fotos.add(File(foto.path));
-        // _carouselIndex++;
+        if (_animal.fotos.length > 1) {
+          _buttonCarouselController.animateToPage(_animal.fotos.length - 1);
+        }
       });
     }
   }
@@ -256,7 +258,9 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
     if (pickedFile != null) {
       setState(() {
         _animal.fotos.add(File(pickedFile.path));
-        // _carouselIndex = _animal.fotos.length - 1;
+        if (_animal.fotos.length > 1) {
+          _buttonCarouselController.animateToPage(_animal.fotos.length - 1);
+        }
       });
     }
   }
@@ -269,7 +273,6 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
           enlargeCenterPage: true,
           viewportFraction: 0.9,
           aspectRatio: 2.0,
-          // initialPage: _animal.fotos.length - 1,
         ),
         carouselController: _buttonCarouselController,
         items: _animal.fotos.map((foto) {
