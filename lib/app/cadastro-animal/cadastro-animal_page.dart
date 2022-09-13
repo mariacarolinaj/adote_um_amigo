@@ -222,19 +222,44 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
         context: context,
         builder: (BuildContext context) {
           return SimpleDialog(
-            title: const Text('Adicionar fotos'),
+            title: const Text(
+              'Adicionar fotos',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Cores.titulo,
+                  fontSize: 16,
+                  fontStyle: FontStyle.normal),
+            ),
             children: <Widget>[
-              SimpleDialogOption(
-                onPressed: () {
-                  Navigator.pop(context, true);
-                },
-                child: const Text('Abrir galeria'),
-              ),
-              SimpleDialogOption(
-                onPressed: () {
-                  Navigator.pop(context, false);
-                },
-                child: const Text('Abrir Câmera'),
+              Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    OutlinedButton(
+                      onPressed: () => Navigator.pop(context, true),
+                      style: ButtonStyle(
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0))),
+                      ),
+                      child: const Text(
+                        "Galeria",
+                        style: TextStyle(color: Cores.texto),
+                      ),
+                    ),
+                    const SizedBox(width: 32),
+                    OutlinedButton(
+                      onPressed: () => Navigator.pop(context, false),
+                      style: ButtonStyle(
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0))),
+                      ),
+                      child: const Text(
+                        "Câmera",
+                        style: TextStyle(color: Cores.texto),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           );
