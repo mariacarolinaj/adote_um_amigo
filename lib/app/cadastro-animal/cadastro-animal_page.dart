@@ -16,10 +16,10 @@ class CadastroAnimalPage extends StatefulWidget {
 }
 
 class CadastroAnimalPageState extends State<CadastroAnimalPage> {
-  final _formKey = GlobalKey<FormState>();
-  CarouselController buttonCarouselController = CarouselController();
-
-  Animal animal = Animal();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final CarouselController _buttonCarouselController = CarouselController();
+  int _carouselIndex = -1;
+  Animal _animal = Animal();
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +66,7 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
           ),
           _buildFieldCaracteristicas(),
           _buildFieldVacinas(),
-          if (animal.fotos.isNotEmpty) _buildCarouselFotos(),
+          if (_animal.fotos.isNotEmpty) _buildCarouselFotos(),
           _buildImagePicker(),
           _buildButton(),
         ],
@@ -86,7 +86,7 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
         if (value == null || value.isEmpty) {
           return 'Por favor, insira o nome do animal';
         }
-        animal.nome = value;
+        _animal.nome = value;
         return null;
       },
     );
@@ -106,7 +106,7 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
           if (value == null || value.isEmpty) {
             return 'Insira a raça';
           }
-          animal.raca = value;
+          _animal.raca = value;
           return null;
         },
       ),
@@ -132,7 +132,7 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
           if (value == null || value.isEmpty) {
             return 'Insira a idade';
           }
-          animal.idade = int.parse(value);
+          _animal.idade = int.parse(value);
           return null;
         },
       ),
@@ -153,7 +153,7 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
         if (value == null || value.isEmpty) {
           return 'Insira algumas características do bichinho, como personalidade, cor...';
         }
-        animal.caracteristicas = value;
+        _animal.caracteristicas = value;
         return null;
       },
     );
@@ -173,7 +173,7 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
         if (value == null || value.isEmpty) {
           return 'Insira algumas informações sobre o estado vacinal do animal';
         }
-        animal.vacinas = value;
+        _animal.vacinas = value;
         return null;
       },
     );
@@ -222,8 +222,6 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
         })) {
       case true:
         _getFotoGaleria();
-        print('------------------------------------------------------');
-        print(this.animal.fotos.first);
         break;
       case false:
         _getFotoCamera();
@@ -242,7 +240,8 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
     );
     if (foto != null) {
       setState(() {
-        animal.fotos.add(File(foto.path));
+        _animal.fotos.add(File(foto.path));
+        _carouselIndex = _animal.fotos.length - 1;
       });
     }
   }
@@ -255,7 +254,8 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
     );
     if (pickedFile != null) {
       setState(() {
-        animal.fotos.add(File(pickedFile.path));
+        _animal.fotos.add(File(pickedFile.path));
+        _carouselIndex = _animal.fotos.length - 1;
       });
     }
   }
@@ -267,18 +267,16 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
         enlargeCenterPage: true,
         viewportFraction: 0.9,
         aspectRatio: 2.0,
-        initialPage: 2,
+        initialPage: _carouselIndex,
       ),
-      carouselController: buttonCarouselController,
-      items: [1, 2, 3, 4, 5].map((i) {
+      carouselController: _buttonCarouselController,
+      items: _animal.fotos.map((foto) {
         return Builder(
           builder: (BuildContext context) {
             return Container(
-              // width: MediaQuery.of(context).size.width * 0.2,
-              // height: MediaQuery.of(context).size.height * 0.2,
-              margin: EdgeInsets.symmetric(horizontal: 5.0),
-              decoration: BoxDecoration(color: Colors.amber),
-              child: Image(image: FileImage(animal.fotos.first)),
+              margin: const EdgeInsets.symmetric(horizontal: 5.0),
+              decoration: const BoxDecoration(color: Colors.amber),
+              child: Image(image: FileImage(foto)),
             );
           },
         );
