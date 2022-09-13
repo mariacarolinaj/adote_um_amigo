@@ -18,8 +18,9 @@ class CadastroAnimalPage extends StatefulWidget {
 class CadastroAnimalPageState extends State<CadastroAnimalPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final CarouselController _buttonCarouselController = CarouselController();
-  int _carouselIndex = -1;
+  int _carouselCurrentIndex = -1;
   Animal _animal = Animal();
+  File? _fotoAtualCarousel;
 
   @override
   Widget build(BuildContext context) {
@@ -181,7 +182,7 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
 
   Widget _buildImagePicker() {
     return TextButton(
-      onPressed: _buildPhotoSourceDialog,
+      onPressed: _animal.fotos.length < 5 ? _buildPhotoSourceDialog : null,
       child: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -189,7 +190,7 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
             Icon(Icons.add_circle_outline_rounded,
                 color: Cores.textoBotaoSecundario),
             Text(
-              '   Adicionar fotos',
+              '   Adicionar foto',
               style: TextStyle(color: Cores.textoBotaoSecundario, fontSize: 14),
             )
           ],
@@ -241,7 +242,7 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
     if (foto != null) {
       setState(() {
         _animal.fotos.add(File(foto.path));
-        _carouselIndex = _animal.fotos.length - 1;
+        // _carouselIndex++;
       });
     }
   }
@@ -255,32 +256,77 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
     if (pickedFile != null) {
       setState(() {
         _animal.fotos.add(File(pickedFile.path));
-        _carouselIndex = _animal.fotos.length - 1;
+        // _carouselIndex = _animal.fotos.length - 1;
       });
     }
   }
 
   Widget _buildCarouselFotos() {
-    return CarouselSlider(
-      options: CarouselOptions(
-        autoPlay: false,
-        enlargeCenterPage: true,
-        viewportFraction: 0.9,
-        aspectRatio: 2.0,
-        initialPage: _carouselIndex,
+    return Column(children: <Widget>[
+      CarouselSlider(
+        options: CarouselOptions(
+          autoPlay: false,
+          enlargeCenterPage: true,
+          viewportFraction: 0.9,
+          aspectRatio: 2.0,
+          // initialPage: _animal.fotos.length - 1,
+        ),
+        carouselController: _buttonCarouselController,
+        items: _animal.fotos.map((foto) {
+          _fotoAtualCarousel = foto;
+          return Builder(
+            builder: (BuildContext context) {
+              return Container(
+                margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                child: Image(image: FileImage(foto)),
+              );
+            },
+          );
+        }).toList(),
       ),
-      carouselController: _buttonCarouselController,
-      items: _animal.fotos.map((foto) {
-        return Builder(
-          builder: (BuildContext context) {
-            return Container(
-              margin: const EdgeInsets.symmetric(horizontal: 5.0),
-              decoration: const BoxDecoration(color: Colors.amber),
-              child: Image(image: FileImage(foto)),
-            );
+      _buildButtonBar(),
+    ]);
+  }
+
+  Row _buildButtonBar() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        IconButton(
+          icon: const Icon(Icons.chevron_left),
+          tooltip: 'Foto anterior',
+          onPressed: _animal.fotos.length > 1
+              ? () {
+                  _buttonCarouselController.previousPage(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.linear);
+                }
+              : null,
+        ),
+        IconButton(
+          icon: const Icon(
+            Icons.close_rounded,
+            color: Cores.erro,
+          ),
+          tooltip: 'Remover foto atual',
+          onPressed: () {
+            setState(() {
+              _animal.fotos.remove(_fotoAtualCarousel);
+            });
           },
-        );
-      }).toList(),
+        ),
+        IconButton(
+          icon: const Icon(Icons.chevron_right),
+          tooltip: 'Próxima foto',
+          onPressed: _animal.fotos.length > 1
+              ? () {
+                  _buttonCarouselController.nextPage(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.linear);
+                }
+              : null,
+        ),
+      ],
     );
   }
 
