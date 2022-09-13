@@ -26,7 +26,7 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.only(top: 32, left: 16, right: 16),
         child: CustomScrollView(
           slivers: [
             SliverFillRemaining(
