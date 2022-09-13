@@ -190,20 +190,24 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
   }
 
   Widget _buildImagePicker() {
+    bool isDisabled = _animal.fotos.length == 5;
     return Padding(
       padding: const EdgeInsets.only(top: 24),
       child: TextButton(
-        onPressed: _animal.fotos.length < 5 ? _buildPhotoSourceDialog : null,
+        onPressed: !isDisabled ? _buildPhotoSourceDialog : null,
         child: Center(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
+            children: [
               Icon(Icons.add_circle_outline_rounded,
-                  color: Cores.textoBotaoSecundario),
+                  color:
+                      !isDisabled ? Cores.textoBotaoSecundario : Colors.grey),
               Text(
                 '   Adicionar foto',
-                style:
-                    TextStyle(color: Cores.textoBotaoSecundario, fontSize: 14),
+                style: TextStyle(
+                    color:
+                        !isDisabled ? Cores.textoBotaoSecundario : Colors.grey,
+                    fontSize: 14),
               )
             ],
           ),
@@ -312,7 +316,10 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         IconButton(
-          icon: const Icon(Icons.chevron_left),
+          icon: const Icon(
+            Icons.chevron_left,
+          ),
+          color: Cores.primaria,
           tooltip: 'Foto anterior',
           onPressed: _animal.fotos.length > 1
               ? () {
@@ -335,7 +342,10 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
           },
         ),
         IconButton(
-          icon: const Icon(Icons.chevron_right),
+          icon: const Icon(
+            Icons.chevron_right,
+          ),
+          color: Cores.primaria,
           tooltip: 'Próxima foto',
           onPressed: _animal.fotos.length > 1
               ? () {
