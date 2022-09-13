@@ -19,7 +19,7 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final CarouselController _buttonCarouselController = CarouselController();
   final Animal _animal = Animal();
-  int _currentIndex = -1;
+  int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -219,51 +219,50 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
 
   Future<void> _buildPhotoSourceDialog() async {
     switch (await showDialog<bool>(
-        context: context,
-        builder: (BuildContext context) {
-          return SimpleDialog(
-            title: const Text(
-              'Adicionar fotos',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: Cores.titulo,
-                  fontSize: 16,
-                  fontStyle: FontStyle.normal),
-            ),
-            children: <Widget>[
-              Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    OutlinedButton(
-                      onPressed: () => Navigator.pop(context, true),
-                      style: ButtonStyle(
-                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0))),
-                      ),
-                      child: const Text(
-                        "Galeria",
-                        style: TextStyle(color: Cores.texto),
-                      ),
+      context: context,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          title: const Text(
+            'Adicionar fotos',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                color: Cores.titulo, fontSize: 16, fontStyle: FontStyle.normal),
+          ),
+          children: <Widget>[
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  OutlinedButton(
+                    onPressed: () => Navigator.pop(context, true),
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0))),
                     ),
-                    const SizedBox(width: 32),
-                    OutlinedButton(
-                      onPressed: () => Navigator.pop(context, false),
-                      style: ButtonStyle(
-                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0))),
-                      ),
-                      child: const Text(
-                        "Câmera",
-                        style: TextStyle(color: Cores.texto),
-                      ),
+                    child: const Text(
+                      "Galeria",
+                      style: TextStyle(color: Cores.texto),
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(width: 32),
+                  OutlinedButton(
+                    onPressed: () => Navigator.pop(context, false),
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0))),
+                    ),
+                    child: const Text(
+                      "Câmera",
+                      style: TextStyle(color: Cores.texto),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          );
-        })) {
+            ),
+          ],
+        );
+      },
+    )) {
       case true:
         _getFotoGaleria();
         break;
@@ -283,12 +282,14 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
       maxHeight: 1800,
     );
     if (foto != null) {
-      setState(() {
-        _animal.fotos.add(File(foto.path));
-        if (_animal.fotos.length > 1) {
-          _buttonCarouselController.animateToPage(_animal.fotos.length - 1);
-        }
-      });
+      setState(
+        () {
+          _animal.fotos.add(File(foto.path));
+          if (_animal.fotos.length > 1) {
+            _buttonCarouselController.animateToPage(_animal.fotos.length - 1);
+          }
+        },
+      );
     }
   }
 
@@ -299,45 +300,51 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
       maxHeight: 1800,
     );
     if (pickedFile != null) {
-      setState(() {
-        _animal.fotos.add(File(pickedFile.path));
-        if (_animal.fotos.length > 1) {
-          _buttonCarouselController.animateToPage(_animal.fotos.length - 1);
-        }
-      });
+      setState(
+        () {
+          _animal.fotos.add(File(pickedFile.path));
+          if (_animal.fotos.length > 1) {
+            _buttonCarouselController.animateToPage(_animal.fotos.length - 1);
+          }
+        },
+      );
     }
   }
 
   Widget _buildCarouselFotos() {
     return Padding(
       padding: const EdgeInsets.only(top: 32),
-      child: Column(children: <Widget>[
-        CarouselSlider(
-          options: CarouselOptions(
-            autoPlay: false,
-            enlargeCenterPage: true,
-            viewportFraction: 0.9,
-            aspectRatio: 2.0,
-            onPageChanged: (index, reason) {
-              setState(() {
-                _currentIndex = index;
-              });
-            },
-          ),
-          carouselController: _buttonCarouselController,
-          items: _animal.fotos.map((foto) {
-            return Builder(
-              builder: (BuildContext context) {
-                return Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                  child: Image(image: FileImage(foto)),
+      child: Column(
+        children: <Widget>[
+          CarouselSlider(
+            options: CarouselOptions(
+              autoPlay: false,
+              enlargeCenterPage: true,
+              viewportFraction: 0.9,
+              aspectRatio: 2.0,
+              onPageChanged: (index, reason) {
+                setState(() {
+                  _currentIndex = index;
+                });
+              },
+            ),
+            carouselController: _buttonCarouselController,
+            items: _animal.fotos.map(
+              (foto) {
+                return Builder(
+                  builder: (BuildContext context) {
+                    return Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                      child: Image(image: FileImage(foto)),
+                    );
+                  },
                 );
               },
-            );
-          }).toList(),
-        ),
-        _buildButtonBar(),
-      ]),
+            ).toList(),
+          ),
+          _buildButtonBar(),
+        ],
+      ),
     );
   }
 
@@ -368,6 +375,9 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
           onPressed: () {
             setState(() {
               _animal.fotos.removeAt(_currentIndex);
+              if (_currentIndex == 1 && _animal.fotos.length == 1) {
+                _currentIndex = 0;
+              }
             });
           },
         ),
