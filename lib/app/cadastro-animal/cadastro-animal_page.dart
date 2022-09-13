@@ -24,39 +24,25 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Padding(
-          padding: const EdgeInsets.all(16),
-          child: CustomScrollView(
-            slivers: [
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: Column(
-                  children: <Widget>[
-                    _buildTitulo(),
-                    Expanded(child: _buildForm()),
-                    _buildButton(),
-                  ],
-                ),
+      resizeToAvoidBottomInset: false,
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: CustomScrollView(
+          slivers: [
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Column(
+                children: <Widget>[
+                  _buildTitulo(),
+                  Expanded(child: _buildForm()),
+                  _buildButton(),
+                ],
               ),
-            ],
-          ),
-        ));
-
-    //   SingleChildScrollView(
-    //     child: Container(
-    //       padding: const EdgeInsets.fromLTRB(16, 32, 16, 16),
-    //       height: MediaQuery.of(context).size.height,
-    //       child: Column(
-    //         children: <Widget>[
-    //           _buildTitulo(),
-    //           _buildForm(),
-    //           _buildButton(),
-    //         ],
-    //       ),
-    //     ),
-    //   ),
-    // );
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildTitulo() {
