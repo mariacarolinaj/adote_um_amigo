@@ -80,32 +80,32 @@ flutter:
   fonts:
     - family: Jost
       fonts:
-        - asset: fonts/Jost-Black.ttf
-        - asset: fonts/Jost-BlackItalic.ttf
+        - asset: lib/assets/fonts/Jost-Black.ttf
+        - asset: lib/assets/fonts/Jost-BlackItalic.ttf
           style: italic
-        - asset: fonts/Jost-Bold.ttf
-        - asset: fonts/Jost-BoldItalic.ttf
+        - asset: lib/assets/fonts/Jost-Bold.ttf
+        - asset: lib/assets/fonts/Jost-BoldItalic.ttf
           style: italic
-        - asset: fonts/Jost-ExtraBold.ttf
-        - asset: fonts/Jost-ExtraBoldItalic.ttf
+        - asset: lib/assets/fonts/Jost-ExtraBold.ttf
+        - asset: lib/assets/fonts/Jost-ExtraBoldItalic.ttf
           style: italic
-        - asset: fonts/Jost-ExtraLight.ttf
-        - asset: fonts/Jost-ExtraLightItalic.ttf
+        - asset: lib/assets/fonts/Jost-ExtraLight.ttf
+        - asset: lib/assets/fonts/Jost-ExtraLightItalic.ttf
           style: italic
-        - asset: fonts/Jost-Italic.ttf
+        - asset: lib/assets/fonts/Jost-Italic.ttf
           style: italic
-        - asset: fonts/Jost-Light.ttf
-        - asset: fonts/Jost-LightItalic.ttf
+        - asset: lib/assets/fonts/Jost-Light.ttf
+        - asset: lib/assets/fonts/Jost-LightItalic.ttf
           style: italic
-        - asset: fonts/Jost-Medium.ttf
-        - asset: fonts/Jost-MediumItalic.ttf
+        - asset: lib/assets/fonts/Jost-Medium.ttf
+        - asset: lib/assets/fonts/Jost-MediumItalic.ttf
           style: italic
-        - asset: fonts/Jost-Regular.ttf
-        - asset: fonts/Jost-SemiBold.ttf
-        - asset: fonts/Jost-SemiBoldItalic.ttf
+        - asset: lib/assets/fonts/Jost-Regular.ttf
+        - asset: lib/assets/fonts/Jost-SemiBold.ttf
+        - asset: lib/assets/fonts/Jost-SemiBoldItalic.ttf
           style: italic
-        - asset: fonts/Jost-Thin.ttf
-        - asset: fonts/Jost-ThinItalic.ttf
+        - asset: lib/assets/fonts/Jost-Thin.ttf
+        - asset: lib/assets/fonts/Jost-ThinItalic.ttf
           style: italic
   #
   # For details regarding fonts from package dependencies,
