@@ -1,3 +1,5 @@
+import 'package:adote_um_amigo/app/perfil-animal/perfil-animal_page.dart';
+import 'package:adote_um_amigo/models/animal.dart';
 import 'package:adote_um_amigo/shared/rotas.dart';
 import 'package:adote_um_amigo/shared/style.dart';
 import 'package:flutter/material.dart';
@@ -64,7 +66,17 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         // exemplo de chamada de páginas através de rotas
-        onPressed: () => Navigator.pushNamed(context, Rotas.cadastroAnimal),
+        onPressed: () => showModalBottomSheet(
+            context: context,
+            builder: (BuildContext context) {
+              Animal animal = Animal(
+                  "Pitty",
+                  "Pastor Alemão",
+                  "Temperamento Docil, interage bem com outros animais e gosta de crianças.",
+                  "vacinas vacinas vacinas",
+                  5);
+              return PerfilAnimalPage({animal: animal});
+            }),
         child: const Icon(Icons.add),
       ),
     );

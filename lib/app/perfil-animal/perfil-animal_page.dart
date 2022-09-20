@@ -5,16 +5,18 @@ import 'package:flutter/material.dart';
 
 class PerfilAnimalPage extends StatefulWidget {
   final String title;
-  const PerfilAnimalPage({Key? key, this.title = 'PerfilAnimalPage', Animal? animal})
+  final Animal? animal;
+
+  const PerfilAnimalPage(Map<Animal, Animal> map, {this.animal, Key? key, this.title = 'PerfilAnimalPage'})
       : super(key: key);
   @override
   PerfilAnimalPageState createState() => PerfilAnimalPageState();
 }
 
 class PerfilAnimalPageState extends State<PerfilAnimalPage> {
-
   @override
   Widget build(BuildContext context) {
+                  print(widget.animal);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Padding(
@@ -25,7 +27,6 @@ class PerfilAnimalPageState extends State<PerfilAnimalPage> {
               hasScrollBody: false,
               child: Column(
                 children: <Widget>[
-                  
                 ],
               ),
             ),
@@ -34,4 +35,6 @@ class PerfilAnimalPageState extends State<PerfilAnimalPage> {
       ),
     );
   }
+
+
 }

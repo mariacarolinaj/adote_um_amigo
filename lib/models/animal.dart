@@ -10,12 +10,11 @@ class Animal {
 
   Animal.empty() {}
 
-  Animal(String nome, String raca, String caracteristicas, String vacinas, int idade, var fotos) {
+  Animal(String nome, String raca, String caracteristicas, String vacinas, int idade) {
     this.nome = nome;
     this.raca = raca;
     this.caracteristicas = caracteristicas;
     this.vacinas = vacinas;
     this.idade = idade;
-    this.fotos = fotos;
   }
 }
