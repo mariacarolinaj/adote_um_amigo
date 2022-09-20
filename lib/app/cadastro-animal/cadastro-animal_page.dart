@@ -405,8 +405,8 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
         padding: const EdgeInsets.symmetric(vertical: 16.0),
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            primary: Colors.white,
-            surfaceTintColor: Cores.primaria,
+            primary: Cores.primaria,
+            // surfaceTintColor: Cores.primaria,
             fixedSize: const Size.fromWidth(300),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
