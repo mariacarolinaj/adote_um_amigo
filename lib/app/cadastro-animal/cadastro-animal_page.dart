@@ -18,7 +18,7 @@ class CadastroAnimalPage extends StatefulWidget {
 class CadastroAnimalPageState extends State<CadastroAnimalPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final CarouselController _buttonCarouselController = CarouselController();
-  final Animal _animal = Animal();
+  final Animal _animal = Animal.empty();
   int _currentIndex = 0;
 
   @override

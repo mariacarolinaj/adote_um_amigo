@@ -8,5 +8,14 @@ class Animal {
   late int idade;
   late var fotos = <File>[];
 
-  Animal() {}
+  Animal.empty() {}
+
+  Animal(String nome, String raca, String caracteristicas, String vacinas, int idade, var fotos) {
+    this.nome = nome;
+    this.raca = raca;
+    this.caracteristicas = caracteristicas;
+    this.vacinas = vacinas;
+    this.idade = idade;
+    this.fotos = fotos;
+  }
 }
