@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:adote_um_amigo/models/animal.dart';
@@ -19,6 +20,7 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final CarouselController _buttonCarouselController = CarouselController();
   final Animal _animal = Animal.empty();
+
   int _currentIndex = 0;
 
   @override
@@ -275,6 +277,13 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
     }
   }
 
+  String _convertImageToBase64(PickedFile foto) {
+    File imagem = File(foto.path);
+    final bytes = imagem.readAsBytesSync();
+    String base64Image = base64Encode(bytes);
+    return base64Image;
+  }
+
   void _getFotoGaleria() async {
     PickedFile? foto = await ImagePicker().getImage(
       source: ImageSource.gallery,
@@ -284,7 +293,8 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
     if (foto != null) {
       setState(
         () {
-          _animal.fotos.add(File(foto.path));
+          String base64Image = _convertImageToBase64(foto);
+          _animal.fotos.add(base64Image);
           if (_animal.fotos.length > 1) {
             _buttonCarouselController.animateToPage(_animal.fotos.length - 1);
           }
@@ -302,7 +312,9 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
     if (pickedFile != null) {
       setState(
         () {
-          _animal.fotos.add(File(pickedFile.path));
+          String base64Image = _convertImageToBase64(pickedFile);
+          _animal.fotos.add(base64Image);
+
           if (_animal.fotos.length > 1) {
             _buttonCarouselController.animateToPage(_animal.fotos.length - 1);
           }
@@ -335,7 +347,7 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
                   builder: (BuildContext context) {
                     return Container(
                       margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                      child: Image(image: FileImage(foto)),
+                      child: Image.memory(const Base64Decoder().convert(foto)),
                     );
                   },
                 );

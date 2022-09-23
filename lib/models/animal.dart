@@ -1,20 +1,13 @@
-import 'dart:io';
-
 class Animal {
   late String nome;
   late String raca;
   late String caracteristicas;
   late String vacinas;
   late int idade;
-  late var fotos = <File>[];
+  late var fotos = <String>[]; // base64
 
-  Animal.empty() {}
+  Animal.empty();
 
-  Animal(String nome, String raca, String caracteristicas, String vacinas, int idade) {
-    this.nome = nome;
-    this.raca = raca;
-    this.caracteristicas = caracteristicas;
-    this.vacinas = vacinas;
-    this.idade = idade;
-  }
+  Animal(this.nome, this.raca, this.caracteristicas, this.vacinas, this.idade,
+      this.fotos);
 }
