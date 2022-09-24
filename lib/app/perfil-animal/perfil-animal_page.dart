@@ -211,7 +211,7 @@ class PerfilAnimalPageState extends State<PerfilAnimalPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _getTextInfoValor("${widget.animal.idade} anos"),
-                    _getTextInfoValor('bh'),
+                    _getTextInfoValor('Belo Horizonte'),
                     _getTextInfoValor(widget.animal.vacinas)
                   ],
                 ),
