@@ -76,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Animal animal = Animal(
                   "Pitty",
                   "Pastor Alemão",
-                  "Temperamento Docil, interage bem com outros animais e gosta de crianças.",
+                  "Temperamento dócil, interage bem com outros animais e gosta de crianças.",
                   "vacinas vacinas vacinas",
                   5,
                   [img, img]);

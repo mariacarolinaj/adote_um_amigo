@@ -268,7 +268,9 @@ class PerfilAnimalPageState extends State<PerfilAnimalPage> {
               style: TextStyle(fontSize: 16),
             ),
             onPressed: () {
-              // redirecionar pro chat com o tutor do animal
+              Navigator.pop(context);
+              // Navigator.pushNamed(context, Rotas.chat);
+              // redirecionar para a rota do chat com o tutor do animal
             },
           ),
         ),
