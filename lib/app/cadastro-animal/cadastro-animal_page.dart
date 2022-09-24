@@ -415,24 +415,26 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16.0),
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            primary: Cores.primaria,
-            // surfaceTintColor: Cores.primaria,
-            fixedSize: const Size.fromWidth(300),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
+        child: SizedBox(
+          width: 300,
+          height: 50,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Cores.primaria,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0)),
+            child: const Text(
+              'Cadastrar',
+              style: TextStyle(fontSize: 16),
             ),
-          ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0)),
-          child: const Text(
-            'Cadastrar',
-            style: TextStyle(fontSize: 16),
+            onPressed: () {
+              if (_formKey.currentState!.validate()) {
+                // fazer upload
+              }
+            },
           ),
-          onPressed: () {
-            if (_formKey.currentState!.validate()) {
-              // fazer upload
-            }
-          },
         ),
       ),
     );
