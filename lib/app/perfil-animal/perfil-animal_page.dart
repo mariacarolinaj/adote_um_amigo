@@ -74,7 +74,8 @@ class PerfilAnimalPageState extends State<PerfilAnimalPage> {
                   builder: (BuildContext context) {
                     return Container(
                       margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                      child: Image.memory(const Base64Decoder().convert(foto)),
+                      child: Image.memory(const Base64Decoder().convert(foto),
+                          gaplessPlayback: true),
                     );
                   },
                 );
