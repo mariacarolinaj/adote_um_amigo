@@ -5,5 +5,5 @@ class Rotas {
   static const registroUsuario = '/registro-usuario';
   static const perfilUsuario = '/perfil-usuario';
   static const meusAnimais = '/meus-animais';
-
+  static const listAnimals = '/lista-animais';
 }
