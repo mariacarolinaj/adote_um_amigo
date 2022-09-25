@@ -34,3 +34,5 @@ Comandos básicos do slidy:
 -- Gerar um novo widget (para ser reutilizado em mais locais): > slidy generate widget <nome_pasta/nome_widget>
 
     Exemplo: slidy generate page cadastros/cadastro-animal (basicamente: caminho/nome da página ou widget)
+    
+ Figma: https://www.figma.com/file/PsUWNjgG1KFfQkwGYKxmme/Adote-um-amigo

@@ -1,9 +1,14 @@
 import 'package:adote_um_amigo/app/perfil-animal/perfil-animal_page.dart';
 import 'package:adote_um_amigo/models/animal.dart';
+import 'package:adote_um_amigo/app/meus-animais/meus-animais_page.dart';
 import 'package:adote_um_amigo/shared/rotas.dart';
 import 'package:adote_um_amigo/shared/style.dart';
 import 'package:flutter/material.dart';
 import 'app/cadastro-animal/cadastro-animal_page.dart';
+import 'app/registro-usuario/login.dart';
+import 'app/registro-usuario/criar-usuario.dart';
+import 'app/perfil-animal/perfil-animal_page.dart';
+import 'app/perfil-usuario/perfil-usuario_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -39,6 +44,16 @@ class MyApp extends StatelessWidget {
       routes: <String, WidgetBuilder>{
         Rotas.cadastroAnimal: (BuildContext context) =>
             const CadastroAnimalPage(title: 'Cadastro de Animal'),
+        Rotas.loginUsuario: (BuildContext context) =>
+            const loginUsuarioPage(title: 'Login de Usuario'),
+        Rotas.registroUsuario: (BuildContext context) =>
+            const RegisterPage(title: 'Cadastro de Usuario'),
+        Rotas.perfilAnimal: (BuildContext context) =>
+            const PerfilAnimalPage(title: 'Perfil Animal'),
+        Rotas.perfilUsuario: (BuildContext context) =>
+            const PerfilUsuarioPage(title: 'Perfil de usuario'),
+        Rotas.meusAnimais: (BuildContext context) =>
+            const MeusAnimaisPage(title: 'MeusAnimais'),
       },
     );
   }
@@ -69,20 +84,21 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         // exemplo de chamada de páginas através de rotas
-        onPressed: () => showModalBottomSheet(
-            isScrollControlled: true,
-            context: context,
-            builder: (BuildContext context) {
-              Animal animal = Animal(
-                  "Pitty",
-                  "Pastor Alemão",
-                  "Temperamento dócil, interage bem com outros animais e gosta de crianças.",
-                  "vacinas vacinas vacinas",
-                  5,
-                  [img, img]);
-              return PerfilAnimalPage(animal);
-            }),
+        // onPressed: () => showModalBottomSheet(
+        //     isScrollControlled: true,
+        //     context: context,
+        //     builder: (BuildContext context) {
+        //       Animal animal = Animal(
+        //           "Pitty",
+        //           "Pastor Alemão",
+        //           "Temperamento dócil, interage bem com outros animais e gosta de crianças.",
+        //           "vacinas vacinas vacinas",
+        //           5,
+        //           [img, img]);
+        //       return PerfilAnimalPage(animal);
+        //     }),
 
+        onPressed: () => Navigator.pushNamed(context, Rotas.loginUsuario),
         child: const Icon(Icons.add),
       ),
     );
