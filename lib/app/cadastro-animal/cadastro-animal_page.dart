@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../shared/style.dart';
+import 'package:adote_um_amigo/shared/rotas.dart';
 
 class CadastroAnimalPage extends StatefulWidget {
   final String title;
@@ -418,7 +419,7 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
           ),
           onPressed: () {
             if (_formKey.currentState!.validate()) {
-              // fazer upload
+              Navigator.pushNamed(context, Rotas.listAnimals);
             }
           },
         ),
