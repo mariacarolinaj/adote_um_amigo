@@ -2,6 +2,7 @@ import 'package:adote_um_amigo/shared/rotas.dart';
 import 'package:adote_um_amigo/shared/style.dart';
 import 'package:flutter/material.dart';
 import 'app/cadastro-animal/cadastro-animal_page.dart';
+import 'app/perfil-usuario/perfil-usuario_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -37,6 +38,8 @@ class MyApp extends StatelessWidget {
       routes: <String, WidgetBuilder>{
         Rotas.cadastroAnimal: (BuildContext context) =>
             const CadastroAnimalPage(title: 'Cadastro de Animal'),
+        Rotas.perfilUsuario: (BuildContext context) =>
+            const PerfilUsuarioPage(title: 'Perfil de usuario'),
       },
     );
   }
@@ -64,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         // exemplo de chamada de páginas através de rotas
-        onPressed: () => Navigator.pushNamed(context, Rotas.cadastroAnimal),
+        onPressed: () => Navigator.pushNamed(context, Rotas.perfilUsuario),
         child: const Icon(Icons.add),
       ),
     );
