@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../shared/rotas.dart';
 import '../../shared/style.dart';
 import 'NumbersWidget.dart';
 
@@ -73,7 +74,7 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
     radius: profileHeight / 2,
     backgroundColor: Colors.grey.shade800,
     backgroundImage: NetworkImage(
-      'https://images.app.goo.gl/Qr6fW6UwoUhLMEMk9',
+      'https://cdn.pixabay.com/photo/2018/01/06/09/25/hijab-3064633_960_720.jpg',
     ),
   );
 
@@ -81,7 +82,7 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
     children: [
       const SizedBox(height: 8),
       Text(
-        'Jonas',
+        'Ana',
         style: TextStyle(fontSize: 28, color: Colors.black, fontWeight: FontWeight.bold),
       ),
       const SizedBox(height: 8),
@@ -95,11 +96,11 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          buildSocialIcon(FontAwesomeIcons.dog),
+          buildSocialIcon(FontAwesomeIcons.dog, Rotas.meusAnimais),
           SizedBox(width: 12),
-          buildSocialIcon(FontAwesomeIcons.searchLocation),
+          buildSocialIcon(FontAwesomeIcons.searchLocation, Rotas.meusAnimais),  //adicionar rota de localizacao
           SizedBox(width: 12),
-          buildSocialIcon(FontAwesomeIcons.star),
+          buildSocialIcon(FontAwesomeIcons.star, Rotas.meusAnimais), //adicionar rota de quantas estrelas
         ],
       ),
 
@@ -113,24 +114,26 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
       const SizedBox(height: 16),
       buildAbout(),
       const SizedBox(height: 32),
+      buildMyAnimal(),
+      const SizedBox(height: 32),
     ],
   );
 
   //icones de informacao do usuario
-  Widget buildSocialIcon(IconData icon) => CircleAvatar(
+  Widget buildSocialIcon(IconData icon, String rotas) => CircleAvatar(
     radius: 25,
     child: Material(
       shape: CircleBorder(),
       clipBehavior: Clip.hardEdge,
       color: Colors.transparent,
       child: InkWell(
-        onTap: () {},
+        onTap: () => Navigator.pushNamed(context, rotas),
         child: Center(child: Icon(icon, size: 32)),
       ),
     ),
   );
 
-  //botao para demostrar interesse no animal
+  //botao para entrar em contato com um usuario
   Widget buildAbout() => Container(
     child: TextButton(
       style: TextButton.styleFrom(
@@ -141,7 +144,22 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
         'Entrar em contato',
         style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
       ),
-      onPressed: () {},
+      onPressed: () {},  //colocar rota do chat
+    ),
+  );
+
+  //botao para meus animais de interesse *Futuramente colocar em um if para visao do usuario somente
+  Widget buildMyAnimal() => Container(
+    child: TextButton(
+      style: TextButton.styleFrom(
+          backgroundColor: Colors.orangeAccent,
+          elevation: 30,
+          shadowColor: Colors.green),
+      child: Text(
+        'Meus animais de interesse',
+        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+      ),
+      onPressed: () => Navigator.pushNamed(context, Rotas.meusAnimais),
     ),
   );
 }

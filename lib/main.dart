@@ -1,3 +1,4 @@
+import 'package:adote_um_amigo/app/meus-animais/meus-animais_page.dart';
 import 'package:adote_um_amigo/shared/rotas.dart';
 import 'package:adote_um_amigo/shared/style.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +41,8 @@ class MyApp extends StatelessWidget {
             const CadastroAnimalPage(title: 'Cadastro de Animal'),
         Rotas.perfilUsuario: (BuildContext context) =>
             const PerfilUsuarioPage(title: 'Perfil de usuario'),
+        Rotas.meusAnimais: (BuildContext context) =>
+            const MeusAnimaisPage(title: 'MeusAnimais'),
       },
     );
   }
