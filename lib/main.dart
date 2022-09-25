@@ -1,5 +1,6 @@
 import 'package:adote_um_amigo/app/perfil-animal/perfil-animal_page.dart';
 import 'package:adote_um_amigo/models/animal.dart';
+import 'package:adote_um_amigo/app/listagem-animais/listagem-animais_page.dart';
 import 'package:adote_um_amigo/app/meus-animais/meus-animais_page.dart';
 import 'package:adote_um_amigo/shared/rotas.dart';
 import 'package:adote_um_amigo/shared/style.dart';
@@ -54,6 +55,8 @@ class MyApp extends StatelessWidget {
             const PerfilUsuarioPage(title: 'Perfil de usuario'),
         Rotas.meusAnimais: (BuildContext context) =>
             const MeusAnimaisPage(title: 'MeusAnimais'),
+        Rotas.listAnimals: (BuildContext context) =>
+            const ListagemAnimaisPage(),
       },
     );
   }
