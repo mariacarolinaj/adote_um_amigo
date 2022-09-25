@@ -49,8 +49,6 @@ class MyApp extends StatelessWidget {
             const loginUsuarioPage(title: 'Login de Usuario'),
         Rotas.registroUsuario: (BuildContext context) =>
             const RegisterPage(title: 'Cadastro de Usuario'),
-        Rotas.perfilAnimal: (BuildContext context) =>
-            const PerfilAnimalPage(title: 'Perfil Animal'),
         Rotas.perfilUsuario: (BuildContext context) =>
             const PerfilUsuarioPage(title: 'Perfil de usuario'),
         Rotas.meusAnimais: (BuildContext context) =>
@@ -76,16 +74,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const <Widget>[
-            //chamar a splash!!
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
+    return loginUsuarioPage();
+    // return Scaffold(
+    //   body: Center(
+    //     child: Column(
+    //       mainAxisAlignment: MainAxisAlignment.center,
+    //       children: const <Widget>[
+    //         //chamar a splash!!
+    //       ],
+    //     ),
+    //   ),
+    //   floatingActionButton: FloatingActionButton(
         // exemplo de chamada de páginas através de rotas
         // onPressed: () => showModalBottomSheet(
         //     isScrollControlled: true,
@@ -100,10 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
         //           [img, img]);
         //       return PerfilAnimalPage(animal);
         //     }),
-
-        onPressed: () => Navigator.pushNamed(context, Rotas.loginUsuario),
-        child: const Icon(Icons.add),
-      ),
-    );
+      // ),
+    // ),);
   }
 }

@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../shared/style.dart';
 import 'package:adote_um_amigo/shared/rotas.dart';
+import 'package:adote_um_amigo/app/perfil-animal/perfil-animal_page.dart';
 
 class CadastroAnimalPage extends StatefulWidget {
   final String title;
@@ -29,7 +30,7 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Padding(
-        padding: const EdgeInsets.only(top: 32, left: 16, right: 16),
+        padding: const EdgeInsets.only(top: 40, left: 16, right: 16),
         child: CustomScrollView(
           slivers: [
             SliverFillRemaining(
@@ -432,8 +433,15 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
             ),
             onPressed: () {
               if (_formKey.currentState!.validate()) {
-                 Navigator.pushNamed(context, Rotas.listAnimals);
+                Navigator.pushNamed(context, Rotas.listAnimals);
                 // fazer upload
+                showModalBottomSheet(
+                  isScrollControlled: true,
+                  context: context,
+                  builder: (BuildContext context) {
+                    return PerfilAnimalPage(_animal);
+                  },
+                );
               }
             },
           ),

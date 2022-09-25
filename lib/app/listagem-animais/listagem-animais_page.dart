@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:adote_um_amigo/models/animal.dart';
+import 'package:adote_um_amigo/shared/rotas.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -54,9 +55,15 @@ class ListagemAnimaisPageState extends State<ListagemAnimaisPage> {
       width: MediaQuery.of(context).size.width / 2,
       child: Column(
         children: [
-          CircleAvatar(
-            backgroundImage: NetworkImage('https://pbs.twimg.com/media/EvHvTkCWQAA13pI.jpg'),
-          )
+          FloatingActionButton(
+              backgroundColor: Colors.transparent,
+              onPressed: () {
+                Navigator.of(context).pushNamed(Rotas.perfilUsuario);
+              },
+              child: CircleAvatar(
+                backgroundImage: NetworkImage(
+                    'https://pbs.twimg.com/media/EvHvTkCWQAA13pI.jpg'),
+              )),
         ],
         crossAxisAlignment: CrossAxisAlignment.end,
       ),
@@ -73,8 +80,7 @@ class ListagemAnimaisPageState extends State<ListagemAnimaisPage> {
             fontFamily: 'Jost',
             fontStyle: FontStyle.normal),
         children: <TextSpan>[
-          TextSpan(
-              text: name, style: TextStyle(fontWeight: FontWeight.w700)),
+          TextSpan(text: name, style: TextStyle(fontWeight: FontWeight.w700)),
         ],
       ),
     );
@@ -96,14 +102,15 @@ class ListagemAnimaisPageState extends State<ListagemAnimaisPage> {
     );
   }
 
-  Widget buildSegment(String text){
+  Widget buildSegment(String text) {
     return Container(
       child: Text(
         text,
-        style: TextStyle(fontSize: 22, color: Colors.white),),
+        style: TextStyle(fontSize: 22, color: Colors.white),
+      ),
     );
   }
-  
+
   Widget _buildSegmentControl() {
     return Container(
       alignment: Alignment.center,
@@ -119,7 +126,7 @@ class ListagemAnimaisPageState extends State<ListagemAnimaisPage> {
           2: buildSegment("Coelho"),
           3: buildSegment("Hamster")
         },
-        onValueChanged: (value){
+        onValueChanged: (value) {
           setState(() {
             groupValue = value;
           });
@@ -169,5 +176,4 @@ class ListagemAnimaisPageState extends State<ListagemAnimaisPage> {
       ],
     );
   }
-
 }
