@@ -1,4 +1,5 @@
 import 'package:adote_um_amigo/app/meus-animais/meus-animais_page.dart';
+import 'package:adote_um_amigo/shared/BarraNavegacaoInferior.dart';
 import 'package:adote_um_amigo/shared/rotas.dart';
 import 'package:adote_um_amigo/shared/style.dart';
 import 'package:flutter/material.dart';
@@ -52,6 +53,7 @@ class MyApp extends StatelessWidget {
             const PerfilUsuarioPage(title: 'Perfil de usuario'),
         Rotas.meusAnimais: (BuildContext context) =>
             const MeusAnimaisPage(title: 'MeusAnimais'),
+
       },
     );
   }
@@ -79,9 +81,10 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         // exemplo de chamada de páginas através de rotas
-        onPressed: () => Navigator.pushNamed(context, Rotas.loginUsuario),
+        onPressed: () => Navigator.pushNamed(context, Rotas.perfilUsuario),
         child: const Icon(Icons.add),
       ),
+      bottomNavigationBar: BarraNavegacaoInferior(),
     );
   }
 }
