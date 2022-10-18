@@ -18,7 +18,6 @@ class loginUsuarioPageState extends State<loginUsuarioPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
       body: Container(
         padding: const EdgeInsets.all(20),
         child: Column(
