@@ -10,22 +10,34 @@ class DataBaseService extends StatefulWidget {
 class _DataBaseServiceState extends State<DataBaseService> {
   _getDB() async {
     final caminhoBancoDados = await getDatabasesPath();
-    final localBancoDados = join(caminhoBancoDados, "banco3.bd");
+    final localBancoDados = join(caminhoBancoDados, "banco.bd");
     var bd = await openDatabase(localBancoDados, version: 1,
         onCreate: (db, dbVersaoRecente) {
       String sql =
-          "CREATE TABLE usuarios (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-          "nome VARCHAR, "
-          "idade INTEGER, "
-          "email VARCHAR, "
-          "password VARCHAR); "
-          "CREATE TABLE pet (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-          "nome VARCHAR, "
+          "CREATE TABLE usuario (id INTEGER PRIMARY KEY AUTOINCREMENT, "
+          "nome TEXT, "
+          "email TEXT, "
+          "imagemPerfil TEXT, "
+          "imagemCapa TEXT, "
+          "apresentacao TEXT, "
+          "password TEXT, "
+          "latGeo REAL, "
+          "lonGeo REAL, "
+          "telefone TEXT); "
+          "CREATE TABLE animal (id INTEGER PRIMARY KEY AUTOINCREMENT, "
+          "nome TEXT, "
           "age INTEGER, "
-          "raca VARCHAR, "
-          "caracteristicas VARCHAR, "
-          "foto VARCHAR,"
-          "usuarioID INTEGER); ";
+          "raca TEXT, "
+          "caracteristicas TEXT, "
+          "foto TEXT, "
+          "telefone TEXT, "
+          "usuarioID INTEGER); "
+          "CREATE TABLE interesse (id INTEGER PRIMARY KEY AUTOINCREMENT, "
+          "petId INTEGER, "
+          "interessadoId INTEGER);"
+          "CREATE TABLE fotos (id INTEGER PRIMARY KEY AUTOINCREMENT, "
+          "petId INTEGER, "
+          "foto String);";
       db.execute(sql);
     });
     return bd;
