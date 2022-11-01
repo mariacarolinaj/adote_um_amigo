@@ -3,6 +3,7 @@ import 'package:adote_um_amigo/app/meus-animais/meus-animais_page.dart';
 import 'package:adote_um_amigo/shared/rotas.dart';
 import 'package:adote_um_amigo/shared/style.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'app/cadastro-animal/cadastro-animal_page.dart';
 import 'app/registro-usuario/login.dart';
 import 'app/registro-usuario/criar-usuario.dart';
@@ -68,6 +69,21 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return const loginUsuarioPage();
+    bool sessaoAtiva = false;
+    return FutureBuilder<bool>(
+      future: _isSessaoAtiva(),
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        sessaoAtiva = snapshot.data ?? false;
+        return sessaoAtiva
+            ? const ListagemAnimaisPage()
+            : const loginUsuarioPage();
+      },
+    );
+  }
+
+  Future<bool> _isSessaoAtiva() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool? sessaoAtiva = prefs.getBool('sessaoAtiva');
+    return prefs.getBool('sessaoAtiva') ?? false;
   }
 }
