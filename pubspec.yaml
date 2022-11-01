@@ -33,6 +33,7 @@ dependencies:
     sdk: flutter
   image_picker: ^0.7.0
   carousel_slider: ^4.1.1
+  shared_preferences: ^2.0.15
 
   #iconis social
   font_awesome_flutter: ^9.1.0

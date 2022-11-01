@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../shared/rotas.dart';
 import '../../shared/style.dart';
 import 'NumbersWidget.dart';
@@ -122,6 +123,7 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
           const SizedBox(height: 32),
           buildMyAnimal(),
           const SizedBox(height: 32),
+          _logout(),
         ],
       );
 
@@ -166,6 +168,24 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
             style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
           ),
           onPressed: () => Navigator.pushNamed(context, Rotas.meusAnimais),
+        ),
+      );
+
+  Widget _logout() => Container(
+        child: TextButton(
+          style: TextButton.styleFrom(
+              backgroundColor: Colors.orangeAccent,
+              elevation: 30,
+              shadowColor: Colors.green),
+          child: Text(
+            'Logout',
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+          ),
+          onPressed: () async {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            await prefs.clear();
+            Navigator.pushNamed(context, Rotas.loginUsuario);
+          },
         ),
       );
 }
