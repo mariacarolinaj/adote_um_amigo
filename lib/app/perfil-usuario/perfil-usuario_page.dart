@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../shared/BarraNavegacaoInferior.dart';
 import '../../shared/rotas.dart';
 import '../../shared/style.dart';
 import 'NumbersWidget.dart';
@@ -34,6 +35,7 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
           buildContent(),
         ],
       ),
+      bottomNavigationBar: BarraNavegacaoInferior(),
     );
   }
 
