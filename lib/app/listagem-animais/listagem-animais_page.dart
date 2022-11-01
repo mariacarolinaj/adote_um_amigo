@@ -31,7 +31,6 @@ class ListagemAnimaisPageState extends State<ListagemAnimaisPage> {
             _buildHeader("Robson"),
             _buildHeaderMessage(),
             _buildSegmentControl(),
-            //_buildAnimalsGrid()
           ],
         ),
       ),
