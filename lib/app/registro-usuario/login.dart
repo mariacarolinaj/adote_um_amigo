@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:adote_um_amigo/shared/rotas.dart';
 import 'package:adote_um_amigo/shared/style.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class loginUsuarioPage extends StatefulWidget {
   final String title;
@@ -14,11 +15,11 @@ class loginUsuarioPageState extends State<loginUsuarioPage> {
   @override
   final _formKey = GlobalKey<FormState>();
   var rememberValue = false;
+  var email, senha;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
       body: Container(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -37,6 +38,7 @@ class loginUsuarioPageState extends State<loginUsuarioPage> {
             ),
             Form(
               key: _formKey,
+              autovalidateMode: AutovalidateMode.always,
               child: Column(
                 children: [
                   TextFormField(
@@ -48,6 +50,14 @@ class loginUsuarioPageState extends State<loginUsuarioPage> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Insira seu e-mail';
+                      }
+                      email = value;
+
+                      return null;
+                    },
                   ),
                   const SizedBox(
                     height: 20,
@@ -57,6 +67,8 @@ class loginUsuarioPageState extends State<loginUsuarioPage> {
                       if (value == null || value.isEmpty) {
                         return 'Insira sua senha';
                       }
+                      senha = value;
+
                       return null;
                     },
                     maxLines: 1,
@@ -69,24 +81,15 @@ class loginUsuarioPageState extends State<loginUsuarioPage> {
                       ),
                     ),
                   ),
-                  CheckboxListTile(
-                    title: const Text("Lembrar"),
-                    contentPadding: EdgeInsets.zero,
-                    value: rememberValue,
-                    activeColor: Theme.of(context).colorScheme.primary,
-                    onChanged: (newValue) {
-                      setState(() {
-                        rememberValue = newValue!;
-                      });
-                    },
-                    controlAffinity: ListTileControlAffinity.leading,
-                  ),
                   const SizedBox(
                     height: 20,
                   ),
                   ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, Rotas.cadastroAnimal);
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        await _salvarDadosDeSessao();
+                        Navigator.pushNamed(context, Rotas.cadastroAnimal);
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.fromLTRB(40, 15, 40, 15),
@@ -119,5 +122,12 @@ class loginUsuarioPageState extends State<loginUsuarioPage> {
         ),
       ),
     );
+  }
+
+  Future<void> _salvarDadosDeSessao() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    //buscar dados do usuario nesse momento e armazenar dados básicos no shared preferences tambem.
+    await prefs.setBool("sessaoAtiva", true);
+    await prefs.setString("email", email);
   }
 }
