@@ -1,12 +1,13 @@
+import 'package:adote_um_amigo/app/listagem-animais/listagem-animais_page.dart';
 import 'package:adote_um_amigo/app/meus-animais/meus-animais_page.dart';
 import 'package:adote_um_amigo/shared/BarraNavegacaoInferior.dart';
 import 'package:adote_um_amigo/shared/rotas.dart';
 import 'package:adote_um_amigo/shared/style.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'app/cadastro-animal/cadastro-animal_page.dart';
 import 'app/registro-usuario/login.dart';
 import 'app/registro-usuario/criar-usuario.dart';
-import 'app/perfil-animal/perfil-animal_page.dart';
 import 'app/perfil-usuario/perfil-usuario_page.dart';
 
 void main() {
@@ -47,13 +48,12 @@ class MyApp extends StatelessWidget {
             const loginUsuarioPage(title: 'Login de Usuario'),
         Rotas.registroUsuario: (BuildContext context) =>
             const RegisterPage(title: 'Cadastro de Usuario'),
-        Rotas.perfilAnimal: (BuildContext context) =>
-            const PerfilAnimalPage(title: 'Perfil Animal'),
         Rotas.perfilUsuario: (BuildContext context) =>
             const PerfilUsuarioPage(title: 'Perfil de usuario'),
         Rotas.meusAnimais: (BuildContext context) =>
             const MeusAnimaisPage(title: 'MeusAnimais'),
-
+        Rotas.listAnimals: (BuildContext context) =>
+            const ListagemAnimaisPage(),
       },
     );
   }
@@ -70,21 +70,22 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const <Widget>[
-            //chamar a splash!!
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        // exemplo de chamada de páginas através de rotas
-        onPressed: () => Navigator.pushNamed(context, Rotas.perfilUsuario),
-        child: const Icon(Icons.add),
-      ),
+    bool sessaoAtiva = false;
+    return FutureBuilder<bool>(
+      future: _isSessaoAtiva(),
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        sessaoAtiva = snapshot.data ?? false;
+        return sessaoAtiva
+            ? const ListagemAnimaisPage()
+            : const loginUsuarioPage();
+      },
       bottomNavigationBar: BarraNavegacaoInferior(),
     );
+  }
+
+  Future<bool> _isSessaoAtiva() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool? sessaoAtiva = prefs.getBool('sessaoAtiva');
+    return prefs.getBool('sessaoAtiva') ?? false;
   }
 }
