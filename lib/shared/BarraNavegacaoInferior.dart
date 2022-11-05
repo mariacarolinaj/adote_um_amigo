@@ -9,7 +9,7 @@ class BarraNavegacaoInferior extends StatefulWidget {
   BarraNavegacaoInferiorState createState() => BarraNavegacaoInferiorState();
 }
 class BarraNavegacaoInferiorState extends State<BarraNavegacaoInferior> {
-  int _selectedIndex = 1;
+  int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
     setState(() {
