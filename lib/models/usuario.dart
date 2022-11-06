@@ -1,6 +1,6 @@
 import 'animal.dart';
 
-class Person {
+class Usuario {
   late int id;
   late String nome;
   late String email;
@@ -13,9 +13,9 @@ class Person {
   late var animais = <Animal>[];
   late String telefone;
 
-  Person.empty();
+  Usuario.empty();
 
-  Person(
+  Usuario(
       this.id,
       this.nome,
       this.email,
@@ -28,7 +28,7 @@ class Person {
       this.imagemCapa,
       this.apresentacao);
 
-  Person.fromMap(Map<String, dynamic> map) {
+  Usuario.fromMap(Map<String, dynamic> map) {
     id = map["id"];
     nome = map["nome"];
     email = map["email"];

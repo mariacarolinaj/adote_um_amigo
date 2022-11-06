@@ -1,4 +1,4 @@
-import 'package:adote_um_amigo/models/person.dart';
+import 'package:adote_um_amigo/models/usuario.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../models/animal.dart';
@@ -39,7 +39,7 @@ class DataBaseService {
     return bd;
   }
 
-  Future<int> insertUser(Person pessoa) async {
+  Future<int> insertUser(Usuario pessoa) async {
     Database bd = await _getDB();
     Map<String, dynamic> dadosUsuario = {
       "nome": pessoa.nome,
@@ -84,7 +84,7 @@ class DataBaseService {
     return await bd.insert("interesse", dadosFoto);
   }
 
-  Future<Person> getUserById(int id) async {
+  Future<Usuario> getUserById(int id) async {
     Database bd = await _getDB();
     var response = await bd.query("usuario",
         columns: [
@@ -101,7 +101,7 @@ class DataBaseService {
         ],
         where: "id = ?",
         whereArgs: [id]);
-    return Person.fromMap(response.first);
+    return Usuario.fromMap(response.first);
   }
 
   Future<int> removeUser(int id) async {
