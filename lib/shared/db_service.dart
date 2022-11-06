@@ -8,8 +8,8 @@ class DataBaseService {
     final caminhoBancoDados = await getDatabasesPath();
     final localBancoDados = join(caminhoBancoDados, "banco.bd");
     var bd = await openDatabase(localBancoDados, version: 1,
-        onCreate: (db, dbVersaoRecente) {
-      String sql =
+        onCreate: (db, dbVersaoRecente) async {
+      String tableUsuario =
           "CREATE TABLE usuario (id INTEGER PRIMARY KEY AUTOINCREMENT, "
           "nome TEXT, "
           "email TEXT, "
@@ -19,7 +19,8 @@ class DataBaseService {
           "password TEXT, "
           "latGeo REAL, "
           "lonGeo REAL, "
-          "telefone TEXT); "
+          "telefone TEXT); ";
+      String tableAnimal =
           "CREATE TABLE animal (id INTEGER PRIMARY KEY AUTOINCREMENT, "
           "nome TEXT, "
           "idade INTEGER, "
@@ -27,21 +28,30 @@ class DataBaseService {
           "tipo TEXT, "
           "caracteristicas TEXT, "
           "vacinas TEXT, "
-          "donoId INTEGER); "
+          "donoId INTEGER); ";
+      String tableInteresse =
           "CREATE TABLE interesse (id INTEGER PRIMARY KEY AUTOINCREMENT, "
           "petId INTEGER, "
-          "interessadoId INTEGER);"
+          "interessadoId INTEGER);";
+      String tableFotos =
           "CREATE TABLE fotos (id INTEGER PRIMARY KEY AUTOINCREMENT, "
           "petId INTEGER, "
           "foto String);";
-      db.execute(sql);
+
+      await db.execute(tableUsuario);
+      await db.execute(tableAnimal);
+      await db.execute(tableInteresse);
+      await db.execute(tableFotos);
     });
+    print("------------------------------------------------------\n" +
+        localBancoDados);
+
     return bd;
   }
 
   Future<int> insertUser(Usuario pessoa) async {
     Database bd = await _getDB();
-    Map<String, dynamic> dadosUsuario = {
+    Map<String, dynamic> dados = {
       "nome": pessoa.nome,
       "email": pessoa.email,
       "imagemPerfil": pessoa.imagemPerfil,
@@ -52,12 +62,13 @@ class DataBaseService {
       "lonGeo": pessoa.lonGeo,
       "telefone": pessoa.telefone
     };
-    return await bd.insert("usuario", dadosUsuario);
+
+    return await bd.insert("usuario", dados);
   }
 
   Future<int> insertAnimal(Animal animal) async {
     Database bd = await _getDB();
-    Map<String, dynamic> dadosAnimal = {
+    Map<String, dynamic> dados = {
       "nome": animal.nome,
       "idade": animal.idade,
       "raca": animal.raca,
@@ -66,22 +77,25 @@ class DataBaseService {
       "vacinas": animal.vacinas,
       "donoId": animal.donoId
     };
-    return await bd.insert("animal", dadosAnimal);
+
+    return await bd.insert("animal", dados);
   }
 
   Future<int> insertFotoAnimal(String foto, int petId) async {
     Database bd = await _getDB();
-    Map<String, dynamic> dadosFoto = {"foto": foto, "petId": petId};
-    return await bd.insert("fotos", dadosFoto);
+    Map<String, dynamic> dados = {"foto": foto, "petId": petId};
+
+    return await bd.insert("fotos", dados);
   }
 
   Future<int> insertInteresse(int interessadoId, int petId) async {
     Database bd = await _getDB();
-    Map<String, dynamic> dadosFoto = {
+    Map<String, dynamic> dados = {
       "interessadoId": interessadoId,
       "petId": petId
     };
-    return await bd.insert("interesse", dadosFoto);
+
+    return await bd.insert("interesse", dados);
   }
 
   Future<Usuario> getUserById(int id) async {
@@ -101,6 +115,7 @@ class DataBaseService {
         ],
         where: "id = ?",
         whereArgs: [id]);
+
     return Usuario.fromMap(response.first);
   }
 
@@ -117,19 +132,33 @@ class DataBaseService {
         await bd.delete("animal", where: "id = ?", whereArgs: [id]);
     int remocaoOnAnimal =
         await bd.delete("interesse", where: "petId = ?", whereArgs: [id]);
-    return remocaoOnUser;
+
+    return remocaoOnAnimal;
   }
 
   Future<List<Animal>> getAllAnimal() async {
     Database bd = await _getDB();
-    String sql =
-        "SELECT a.id, a.nome, a.idade, a.raca, a.tipo, a.caracteristicas, a.vacinas, a.donoId, f.foto FROM animal a INNER JOIN fotos f ON a.id = f.petId";
-    return await bd.rawQuery(sql) as List<Animal>;
+    String sql = "SELECT a.id, "
+        "a.nome, "
+        "a.idade, "
+        "a.raca, "
+        "a.tipo, "
+        "a.caracteristicas, "
+        "a.vacinas, "
+        "a.donoId, "
+        "f.foto "
+        "FROM animal a "
+        "LEFT JOIN fotos f "
+        "ON a.id = f.petId";
+
+    var response = await bd.rawQuery(sql);
+
+    return response.map((animal) => Animal.fromMap(animal)).toList();
   }
 
   Future<List<Animal>> getAnimalByUserId(int id) async {
     Database bd = await _getDB();
-    return await bd.query("animal",
+    var response = await bd.query("animal",
         columns: [
           "id",
           "nome",
@@ -141,8 +170,15 @@ class DataBaseService {
           "donoId"
         ],
         where: "donoId = ?",
-        whereArgs: [id]) as List<Animal>;
+        whereArgs: [id]);
+
+    return response.map((animal) => Animal.fromMap(animal)).toList();
   }
 
+  Future<void> deleteDB() async {
+    final caminhoBancoDados = await getDatabasesPath();
+    final localBancoDados = join(caminhoBancoDados, "banco.bd");
+    databaseFactory.deleteDatabase(localBancoDados);
+  }
 // FALTA IMPLEMENTAR GET INTERESSES DOS MEUS ANIMAIS E MEUS ANIMAIS INTERESSADOS
 }
