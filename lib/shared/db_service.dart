@@ -50,7 +50,6 @@ class DataBaseService {
       "password": pessoa.password,
       "latGeo": pessoa.latGeo,
       "lonGeo": pessoa.lonGeo,
-      "animals": pessoa.animals,
       "telefone": pessoa.telefone
     };
     return await bd.insert("usuario", dadosUsuario);
@@ -87,21 +86,22 @@ class DataBaseService {
 
   Future<Person> getUserById(int id) async {
     Database bd = await _getDB();
-    return await bd.query("usuario",
+    var response = await bd.query("usuario",
         columns: [
           "id",
           "nome",
-          "idade",
           "email",
-          "apresentacao",
           "imagemPerfil",
           "imagemCapa",
-          "telefone",
+          "apresentacao",
+          "password",
           "latGeo",
-          "lonGeo"
+          "lonGeo",
+          "telefone"
         ],
         where: "id = ?",
-        whereArgs: [id]) as Person;
+        whereArgs: [id]);
+    return Person.fromMap(response.first);
   }
 
   Future<int> removeUser(int id) async {
