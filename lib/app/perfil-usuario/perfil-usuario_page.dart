@@ -1,6 +1,9 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:adote_um_amigo/models/animal.dart';
+import 'package:adote_um_amigo/models/usuario.dart';
+import 'package:adote_um_amigo/shared/db_service.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -26,8 +29,18 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
   final double coverHeight = 280;
   final double profileHeight = 144;
 
+  Future<Usuario> getUser () async {
+    final fUser = await DataBaseService().getUserById(1);
+    return fUser;
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
+
+    // final Future<Usuario> user = getUser();
+    // debugPrint('movieTitle: $user');
     return Scaffold(
       body: ListView(
         padding: EdgeInsets.zero,
@@ -36,7 +49,7 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
           buildContent(),
         ],
       ),
-      bottomNavigationBar: BarraNavegacaoInferior(),
+      // bottomNavigationBar: BarraNavegacaoInferior(),
     );
   }
 
