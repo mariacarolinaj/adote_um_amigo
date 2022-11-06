@@ -1,10 +1,11 @@
+import 'package:adote_um_amigo/models/interesse.dart';
 import 'package:adote_um_amigo/models/usuario.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../models/animal.dart';
 
 class DataBaseService {
-  _getDB() async {
+  Future<Database> _getDB() async {
     final caminhoBancoDados = await getDatabasesPath();
     final localBancoDados = join(caminhoBancoDados, "banco.bd");
     var bd = await openDatabase(localBancoDados, version: 1,
@@ -78,7 +79,11 @@ class DataBaseService {
       "donoId": animal.donoId
     };
 
-    return await bd.insert("animal", dados);
+    int animalId = await bd.insert("animal", dados);
+
+    animal.fotos.map((foto) async => await insertFotoAnimal(foto, animalId));
+
+    return animalId;
   }
 
   Future<int> insertFotoAnimal(String foto, int petId) async {
@@ -119,23 +124,6 @@ class DataBaseService {
     return Usuario.fromMap(response.first);
   }
 
-  Future<int> removeUser(int id) async {
-    Database bd = await _getDB();
-    int remocao = await bd.delete("usuario", where: "id = ?", whereArgs: [id]);
-
-    return remocao;
-  }
-
-  Future<int> removeAnimal(int id) async {
-    Database bd = await _getDB();
-    int remocaoOnUser =
-        await bd.delete("animal", where: "id = ?", whereArgs: [id]);
-    int remocaoOnAnimal =
-        await bd.delete("interesse", where: "petId = ?", whereArgs: [id]);
-
-    return remocaoOnAnimal;
-  }
-
   Future<List<Animal>> getAllAnimal() async {
     Database bd = await _getDB();
     String sql = "SELECT a.id, "
@@ -153,26 +141,137 @@ class DataBaseService {
 
     var response = await bd.rawQuery(sql);
 
-    return response.map((animal) => Animal.fromMap(animal)).toList();
+    return _mapFotosAnimal(response);
   }
 
   Future<List<Animal>> getAnimalByUserId(int id) async {
     Database bd = await _getDB();
-    var response = await bd.query("animal",
-        columns: [
-          "id",
-          "nome",
-          "idade",
-          "raca",
-          "tipo",
-          "caracteristicas",
-          "vacinas",
-          "donoId"
-        ],
-        where: "donoId = ?",
-        whereArgs: [id]);
+    String sql = "SELECT a.id, "
+        "a.nome, "
+        "a.idade, "
+        "a.raca, "
+        "a.tipo, "
+        "a.caracteristicas, "
+        "a.vacinas, "
+        "a.donoId, "
+        "f.foto "
+        "FROM animal a "
+        "LEFT JOIN fotos f "
+        "ON a.id = f.petId "
+        "WHERE a.donoId = $id";
 
-    return response.map((animal) => Animal.fromMap(animal)).toList();
+    var response = await bd.rawQuery(sql);
+
+    return _mapFotosAnimal(response);
+  }
+
+  List<Animal> _mapFotosAnimal(List<Map<String, Object?>> response) {
+    List<Animal> animais = <Animal>[];
+    for (var map in response) {
+      var index = animais.indexWhere((a) => a.id == map["id"]);
+      if (index >= 0) {
+        animais[index].fotos.add(map["foto"] as String);
+      } else {
+        animais.add(Animal.fromMap(map));
+      }
+    }
+
+    return animais;
+  }
+
+  Future<List<Interesse>> getInteressadosByDonoAnimalId(int id) async {
+    Database bd = await _getDB();
+    String sql = "SELECT i.id, "
+        "a.id as animalId, "
+        "a.nome, as animalNome "
+        "a.idade, as animalIdade "
+        "a.raca, as animalRaca "
+        "a.tipo, as animalTipo "
+        "a.caracteristicas, as animalCaracteristicas "
+        "a.vacinas, as animalVacinas "
+        "a.donoId, as animalDonoId "
+        "u.id, as UserId "
+        "u.nome, as UserNome "
+        "u.email, as UserEmail "
+        "u.imagemPerfil, as UserImagemPerfil "
+        "u.imagemCapa, as UserImagemCapa "
+        "u.apresentacao, as UserApresentacao "
+        "u.password, as UserPassword "
+        "u.latGeo, as UserLatGeo "
+        "u.lonGeo, as UserLonGeo "
+        "u.telefone, as UserTelefone "
+        "FROM interesse i "
+        "INNER JOIN animal a "
+        "ON a.id = i.petId"
+        "INNER JOIN usuario u "
+        "ON u.id = i.interessadoId"
+        "WHERE a.donoId = $id";
+
+    var response = await bd.rawQuery(sql);
+
+    return response.map((interesse) => Interesse.fromMap(interesse)).toList();
+  }
+
+  Future<List<Interesse>> getInteressesByUserId(int id) async {
+    Database bd = await _getDB();
+    String sql = "SELECT i.id, "
+        "a.id as animalId, "
+        "a.nome, as animalNome "
+        "a.idade, as animalIdade "
+        "a.raca, as animalRaca "
+        "a.tipo, as animalTipo "
+        "a.caracteristicas, as animalCaracteristicas "
+        "a.vacinas, as animalVacinas "
+        "a.donoId, as animalDonoId "
+        "u.id, as UserId "
+        "u.nome, as UserNome "
+        "u.email, as UserEmail "
+        "u.imagemPerfil, as UserImagemPerfil "
+        "u.imagemCapa, as UserImagemCapa "
+        "u.apresentacao, as UserApresentacao "
+        "u.password, as UserPassword "
+        "u.latGeo, as UserLatGeo "
+        "u.lonGeo, as UserLonGeo "
+        "u.telefone, as UserTelefone "
+        "FROM interesse i "
+        "INNER JOIN animal a "
+        "ON a.id = i.petId"
+        "INNER JOIN usuario u "
+        "ON u.id = i.interessadoId"
+        "WHERE u.id = $id";
+
+    var response = await bd.rawQuery(sql);
+
+    return response.map((interesse) => Interesse.fromMap(interesse)).toList();
+  }
+
+  Future<List<String>> getFotosByAnimalId(int id) async {
+    Database bd = await _getDB();
+    var response = await bd.query("usuario",
+        columns: ["foto"], where: "petId = ?", whereArgs: [id]);
+
+    return response.map((ret) => ret["foto"] as String).toList();
+  }
+
+  Future<int> removeUser(int id) async {
+    Database bd = await _getDB();
+    int remocao = await bd.delete("usuario", where: "id = ?", whereArgs: [id]);
+
+    return remocao;
+  }
+
+  Future<int> removeAnimal(int id) async {
+    Database bd = await _getDB();
+
+    await bd.delete("interesse", where: "petId = ?", whereArgs: [id]);
+
+    return await bd.delete("animal", where: "id = ?", whereArgs: [id]);
+  }
+
+  Future<int> removeInteresse(int id) async {
+    Database bd = await _getDB();
+
+    return await bd.delete("interesse", where: "id = ?", whereArgs: [id]);
   }
 
   Future<void> deleteDB() async {
@@ -180,5 +279,4 @@ class DataBaseService {
     final localBancoDados = join(caminhoBancoDados, "banco.bd");
     databaseFactory.deleteDatabase(localBancoDados);
   }
-// FALTA IMPLEMENTAR GET INTERESSES DOS MEUS ANIMAIS E MEUS ANIMAIS INTERESSADOS
 }

@@ -10,7 +10,6 @@ class Usuario {
   late String password;
   late double latGeo;
   late double lonGeo;
-  late var animais = <Animal>[];
   late String telefone;
 
   Usuario.empty();
@@ -23,7 +22,6 @@ class Usuario {
       this.latGeo,
       this.lonGeo,
       this.telefone,
-      this.animais,
       this.imagemPerfil,
       this.imagemCapa,
       this.apresentacao);
