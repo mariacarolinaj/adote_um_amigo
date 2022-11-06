@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:adote_um_amigo/models/interesse.dart';
 import 'package:adote_um_amigo/models/usuario.dart';
 import 'package:sqflite/sqflite.dart';
@@ -44,8 +46,6 @@ class DataBaseService {
       await db.execute(tableInteresse);
       await db.execute(tableFotos);
     });
-    print("------------------------------------------------------\n" +
-        localBancoDados);
 
     return bd;
   }
@@ -64,7 +64,11 @@ class DataBaseService {
       "telefone": pessoa.telefone
     };
 
-    return await bd.insert("usuario", dados);
+    int id = await bd.insert("usuario", dados);
+
+    log("Usuário inserido. (ID: $id)");
+
+    return id;
   }
 
   Future<int> insertAnimal(Animal animal) async {
@@ -83,6 +87,8 @@ class DataBaseService {
 
     animal.fotos.map((foto) async => await insertFotoAnimal(foto, animalId));
 
+    log("Animal inserido. (ID: $animalId)");
+
     return animalId;
   }
 
@@ -90,7 +96,11 @@ class DataBaseService {
     Database bd = await _getDB();
     Map<String, dynamic> dados = {"foto": foto, "petId": petId};
 
-    return await bd.insert("fotos", dados);
+    int fotoId = await bd.insert("fotos", dados);
+
+    log("Foto inserida. (ID: $fotoId)");
+
+    return fotoId;
   }
 
   Future<int> insertInteresse(int interessadoId, int petId) async {
@@ -100,7 +110,11 @@ class DataBaseService {
       "petId": petId
     };
 
-    return await bd.insert("interesse", dados);
+    int interesseId = await bd.insert("interesse", dados);
+
+    log("Interesse inserido. (ID: $interesseId)");
+
+    return interesseId;
   }
 
   Future<Usuario> getUserById(int id) async {
@@ -121,7 +135,12 @@ class DataBaseService {
         where: "id = ?",
         whereArgs: [id]);
 
-    return Usuario.fromMap(response.first);
+    Usuario user = Usuario.fromMap(response.first);
+
+    log("Resultado da busca pelo usuário by id:");
+    inspect(user);
+
+    return user;
   }
 
   Future<List<Animal>> getAllAnimal() async {
@@ -141,7 +160,12 @@ class DataBaseService {
 
     var response = await bd.rawQuery(sql);
 
-    return _mapFotosAnimal(response);
+    var animais = _mapFotosAnimal(response);
+
+    log("Resultado da busca por todos os animais:");
+    inspect(animais);
+
+    return animais;
   }
 
   Future<List<Animal>> getAnimalByUserId(int id) async {
@@ -161,8 +185,12 @@ class DataBaseService {
         "WHERE a.donoId = $id";
 
     var response = await bd.rawQuery(sql);
+    var animais = _mapFotosAnimal(response);
 
-    return _mapFotosAnimal(response);
+    log("Resultado da busca por todos os animais by userId:");
+    inspect(animais);
+
+    return animais;
   }
 
   List<Animal> _mapFotosAnimal(List<Map<String, Object?>> response) {
@@ -183,71 +211,81 @@ class DataBaseService {
     Database bd = await _getDB();
     String sql = "SELECT i.id, "
         "a.id as animalId, "
-        "a.nome, as animalNome "
-        "a.idade, as animalIdade "
-        "a.raca, as animalRaca "
-        "a.tipo, as animalTipo "
-        "a.caracteristicas, as animalCaracteristicas "
-        "a.vacinas, as animalVacinas "
-        "a.donoId, as animalDonoId "
-        "u.id, as UserId "
-        "u.nome, as UserNome "
-        "u.email, as UserEmail "
-        "u.imagemPerfil, as UserImagemPerfil "
-        "u.imagemCapa, as UserImagemCapa "
-        "u.apresentacao, as UserApresentacao "
-        "u.password, as UserPassword "
-        "u.latGeo, as UserLatGeo "
-        "u.lonGeo, as UserLonGeo "
-        "u.telefone, as UserTelefone "
+        "a.nome as animalNome, "
+        "a.idade as animalIdade, "
+        "a.raca as animalRaca, "
+        "a.tipo as animalTipo, "
+        "a.caracteristicas as animalCaracteristicas, "
+        "a.vacinas as animalVacinas, "
+        "a.donoId as animalDonoId, "
+        "u.id as UserId, "
+        "u.nome as UserNome, "
+        "u.email as UserEmail, "
+        "u.imagemPerfil as UserImagemPerfil, "
+        "u.imagemCapa as UserImagemCapa, "
+        "u.apresentacao as UserApresentacao, "
+        "u.password as UserPassword, "
+        "u.latGeo as UserLatGeo, "
+        "u.lonGeo as UserLonGeo, "
+        "u.telefone as UserTelefone "
         "FROM interesse i "
         "INNER JOIN animal a "
-        "ON a.id = i.petId"
+        "ON a.id = i.petId "
         "INNER JOIN usuario u "
-        "ON u.id = i.interessadoId"
+        "ON u.id = i.interessadoId "
         "WHERE a.donoId = $id";
 
     var response = await bd.rawQuery(sql);
+    var interessados =
+        response.map((interesse) => Interesse.fromMap(interesse)).toList();
 
-    return response.map((interesse) => Interesse.fromMap(interesse)).toList();
+    log("Resultado da busca por todos os interessados by donoId:");
+    inspect(interessados);
+
+    return interessados;
   }
 
   Future<List<Interesse>> getInteressesByUserId(int id) async {
     Database bd = await _getDB();
     String sql = "SELECT i.id, "
         "a.id as animalId, "
-        "a.nome, as animalNome "
-        "a.idade, as animalIdade "
-        "a.raca, as animalRaca "
-        "a.tipo, as animalTipo "
-        "a.caracteristicas, as animalCaracteristicas "
-        "a.vacinas, as animalVacinas "
-        "a.donoId, as animalDonoId "
-        "u.id, as UserId "
-        "u.nome, as UserNome "
-        "u.email, as UserEmail "
-        "u.imagemPerfil, as UserImagemPerfil "
-        "u.imagemCapa, as UserImagemCapa "
-        "u.apresentacao, as UserApresentacao "
-        "u.password, as UserPassword "
-        "u.latGeo, as UserLatGeo "
-        "u.lonGeo, as UserLonGeo "
-        "u.telefone, as UserTelefone "
+        "a.nome as animalNome, "
+        "a.idade as animalIdade, "
+        "a.raca as animalRaca, "
+        "a.tipo as animalTipo, "
+        "a.caracteristicas as animalCaracteristicas, "
+        "a.vacinas as animalVacinas, "
+        "a.donoId as animalDonoId, "
+        "u.id as UserId, "
+        "u.nome as UserNome, "
+        "u.email as UserEmail, "
+        "u.imagemPerfil as UserImagemPerfil, "
+        "u.imagemCapa as UserImagemCapa, "
+        "u.apresentacao as UserApresentacao, "
+        "u.password as UserPassword, "
+        "u.latGeo as UserLatGeo, "
+        "u.lonGeo as UserLonGeo, "
+        "u.telefone as UserTelefone "
         "FROM interesse i "
         "INNER JOIN animal a "
-        "ON a.id = i.petId"
+        "ON a.id = i.petId "
         "INNER JOIN usuario u "
-        "ON u.id = i.interessadoId"
+        "ON u.id = i.interessadoId "
         "WHERE u.id = $id";
 
     var response = await bd.rawQuery(sql);
+    var interesses =
+        response.map((interesse) => Interesse.fromMap(interesse)).toList();
 
-    return response.map((interesse) => Interesse.fromMap(interesse)).toList();
+    log("Resultado da busca por todos os interesses by userId:");
+    inspect(interesses);
+
+    return interesses;
   }
 
   Future<List<String>> getFotosByAnimalId(int id) async {
     Database bd = await _getDB();
-    var response = await bd.query("usuario",
+    var response = await bd.query("fotos",
         columns: ["foto"], where: "petId = ?", whereArgs: [id]);
 
     return response.map((ret) => ret["foto"] as String).toList();
@@ -257,6 +295,8 @@ class DataBaseService {
     Database bd = await _getDB();
     int remocao = await bd.delete("usuario", where: "id = ?", whereArgs: [id]);
 
+    log("Usuário removido. (ID: $remocao)");
+
     return remocao;
   }
 
@@ -264,19 +304,27 @@ class DataBaseService {
     Database bd = await _getDB();
 
     await bd.delete("interesse", where: "petId = ?", whereArgs: [id]);
+    var remocao = await bd.delete("animal", where: "id = ?", whereArgs: [id]);
 
-    return await bd.delete("animal", where: "id = ?", whereArgs: [id]);
+    log("Animal removido. (ID: $remocao)");
+
+    return remocao;
   }
 
   Future<int> removeInteresse(int id) async {
     Database bd = await _getDB();
 
-    return await bd.delete("interesse", where: "id = ?", whereArgs: [id]);
+    var remocao =
+        await bd.delete("interesse", where: "id = ?", whereArgs: [id]);
+    log("Interesse removido. (ID: $remocao)");
+
+    return remocao;
   }
 
   Future<void> deleteDB() async {
     final caminhoBancoDados = await getDatabasesPath();
     final localBancoDados = join(caminhoBancoDados, "banco.bd");
     databaseFactory.deleteDatabase(localBancoDados);
+    log("Base de dados deletada.");
   }
 }
