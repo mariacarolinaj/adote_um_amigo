@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../models/animal.dart';
+import '../../shared/db_service.dart';
 import '../../shared/rotas.dart';
 
 class MeusAnimaisPage extends StatelessWidget {
@@ -33,9 +35,22 @@ class MeusAnimaisPage extends StatelessWidget {
 class MeusAnimaisPageStateless extends StatelessWidget{
   final double coverHeight = 280;
   final double profileHeight = 144;
+  List<Animal> myanimals = [];
+
+  Future<List<Animal>> getUser () async {
+    final fAnimal = await DataBaseService().getAnimalByUserId(1);
+    return fAnimal;
+  }
 
   @override
   Widget build(BuildContext context) {
+    getUser().then((value) =>
+        debugPrint('myanimals: $value')
+      // myanimals = value
+    ).catchError((error, stackTrace) {
+      print("erro myanimals: $error");
+    });
+
     return Column(
       children: [
         ListTile(

@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../shared/BarraNavegacaoInferior.dart';
 import '../../shared/style.dart';
 
 class ListagemAnimaisPage extends StatefulWidget {
@@ -34,6 +35,7 @@ class ListagemAnimaisPageState extends State<ListagemAnimaisPage> {
           ],
         ),
       ),
+      // bottomNavigationBar: BarraNavegacaoInferior(),
     );
   }
 
