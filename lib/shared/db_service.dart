@@ -1,4 +1,4 @@
-import 'package:adote_um_amigo/models/person.dart';
+import 'package:adote_um_amigo/models/usuario.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../models/animal.dart';
@@ -39,7 +39,7 @@ class DataBaseService {
     return bd;
   }
 
-  Future<int> insertUser(Person pessoa) async {
+  Future<int> insertUser(Usuario pessoa) async {
     Database bd = await _getDB();
     Map<String, dynamic> dadosUsuario = {
       "nome": pessoa.nome,
@@ -50,7 +50,6 @@ class DataBaseService {
       "password": pessoa.password,
       "latGeo": pessoa.latGeo,
       "lonGeo": pessoa.lonGeo,
-      "animals": pessoa.animals,
       "telefone": pessoa.telefone
     };
     return await bd.insert("usuario", dadosUsuario);
@@ -85,28 +84,29 @@ class DataBaseService {
     return await bd.insert("interesse", dadosFoto);
   }
 
-  Future<Person> getUserById(int id) async {
+  Future<Usuario> getUserById(int id) async {
     Database bd = await _getDB();
-    return await bd.query("usuario",
+    var response = await bd.query("usuario",
         columns: [
           "id",
           "nome",
-          "idade",
           "email",
-          "apresentacao",
           "imagemPerfil",
           "imagemCapa",
-          "telefone",
+          "apresentacao",
+          "password",
           "latGeo",
-          "lonGeo"
+          "lonGeo",
+          "telefone"
         ],
         where: "id = ?",
-        whereArgs: [id]) as Person;
+        whereArgs: [id]);
+    return Usuario.fromMap(response.first);
   }
 
   Future<int> removeUser(int id) async {
     Database bd = await _getDB();
-    int remocao = await bd.delete("usuarios", where: "id = ?", whereArgs: [id]);
+    int remocao = await bd.delete("usuario", where: "id = ?", whereArgs: [id]);
 
     return remocao;
   }
@@ -142,16 +142,6 @@ class DataBaseService {
         ],
         where: "donoId = ?",
         whereArgs: [id]) as List<Animal>;
-  }
-
-  Future<int> putUserData(int id, String name, int age) async {
-    Database bd = await _getDB();
-    Map<String, dynamic> dadosUsuario = {
-      "nome": name,
-      "idade": age,
-    };
-    return await bd
-        .update("usuarios", dadosUsuario, where: "id = ?", whereArgs: [id]);
   }
 
 // FALTA IMPLEMENTAR GET INTERESSES DOS MEUS ANIMAIS E MEUS ANIMAIS INTERESSADOS
