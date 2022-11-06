@@ -106,7 +106,7 @@ class DataBaseService {
 
   Future<int> removeUser(int id) async {
     Database bd = await _getDB();
-    int remocao = await bd.delete("usuarios", where: "id = ?", whereArgs: [id]);
+    int remocao = await bd.delete("usuario", where: "id = ?", whereArgs: [id]);
 
     return remocao;
   }
@@ -142,16 +142,6 @@ class DataBaseService {
         ],
         where: "donoId = ?",
         whereArgs: [id]) as List<Animal>;
-  }
-
-  Future<int> putUserData(int id, String name, int age) async {
-    Database bd = await _getDB();
-    Map<String, dynamic> dadosUsuario = {
-      "nome": name,
-      "idade": age,
-    };
-    return await bd
-        .update("usuarios", dadosUsuario, where: "id = ?", whereArgs: [id]);
   }
 
 // FALTA IMPLEMENTAR GET INTERESSES DOS MEUS ANIMAIS E MEUS ANIMAIS INTERESSADOS
