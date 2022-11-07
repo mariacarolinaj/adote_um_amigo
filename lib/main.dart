@@ -8,9 +8,10 @@ import 'app/cadastro-animal/cadastro-animal_page.dart';
 import 'app/registro-usuario/login.dart';
 import 'app/registro-usuario/criar-usuario.dart';
 import 'app/perfil-usuario/perfil-usuario_page.dart';
+import 'app/tutorial/mainTutorial.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MainTutorial());
 }
 
 class MyApp extends StatelessWidget {
