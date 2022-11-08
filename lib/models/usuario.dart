@@ -4,10 +4,10 @@ class Usuario {
   late int id;
   late String nome;
   late String email;
+  late String password;
   late String imagemPerfil;
   late String imagemCapa;
   late String apresentacao;
-  late String password;
   late double latGeo;
   late double lonGeo;
   late String telefone;
