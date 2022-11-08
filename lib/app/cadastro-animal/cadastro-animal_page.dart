@@ -468,6 +468,7 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
             ),
             onPressed: () {
               if (_formKey.currentState!.validate()) {
+                _animal.donoId = 1;
                 DataBaseService().insertAnimal(_animal);
                 Navigator.pushNamed(context, Rotas.listAnimals);
                 showModalBottomSheet(
