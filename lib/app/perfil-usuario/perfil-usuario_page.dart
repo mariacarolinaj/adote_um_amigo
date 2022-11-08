@@ -28,7 +28,7 @@ class PerfilUsuarioPage extends StatefulWidget {
 class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
   final double coverHeight = 280;
   final double profileHeight = 144;
-  Usuario user = Usuario as Usuario;
+  Usuario user = Usuario.empty();
 
   Future<Usuario> getUser () async {
     final fUser = await DataBaseService().getUserById(1);
