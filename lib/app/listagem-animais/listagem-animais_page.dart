@@ -1,6 +1,9 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:adote_um_amigo/models/animal.dart';
+import 'package:adote_um_amigo/models/tipo-animal-enum.dart';
+import 'package:adote_um_amigo/shared/db_service.dart';
 import 'package:adote_um_amigo/shared/rotas.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,10 +22,23 @@ class ListagemAnimaisPage extends StatefulWidget {
 }
 
 class ListagemAnimaisPageState extends State<ListagemAnimaisPage> {
-  int? groupValue = 0;
+  int _groupValue = 0;
+  final List<String> _tiposAnimal = [
+    TipoAnimal.Cachorro,
+    TipoAnimal.Gato,
+    TipoAnimal.Coelho,
+    TipoAnimal.Roedor,
+    TipoAnimal.Peixe,
+    TipoAnimal.Anfibio,
+    TipoAnimal.Reptil,
+    TipoAnimal.Outros
+  ];
+  List<Animal> _animais = [];
+  List<Animal> _animaisFiltro = [];
 
   @override
   Widget build(BuildContext context) {
+    DataBaseService().getAllAnimal().then((value) => _animais = value);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Padding(
@@ -32,6 +48,7 @@ class ListagemAnimaisPageState extends State<ListagemAnimaisPage> {
             _buildHeader("Robson"),
             _buildHeaderMessage(),
             _buildSegmentControl(),
+            _buildAnimalsGrid(),
           ],
         ),
       ),
@@ -115,21 +132,29 @@ class ListagemAnimaisPageState extends State<ListagemAnimaisPage> {
   Widget _buildSegmentControl() {
     return Container(
       alignment: Alignment.center,
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: CupertinoSlidingSegmentedControl<int>(
         backgroundColor: Cores.secondary,
         thumbColor: Colors.yellow,
-        padding: EdgeInsets.all(8),
-        groupValue: groupValue,
+        padding: const EdgeInsets.all(8),
+        groupValue: _groupValue,
         children: {
-          0: buildSegment("Cão"),
-          1: buildSegment("Gato"),
-          2: buildSegment("Coelho"),
-          3: buildSegment("Hamster")
+          0: buildSegment(_tiposAnimal[0]),
+          1: buildSegment(_tiposAnimal[1]),
+          2: buildSegment(_tiposAnimal[2]),
+          3: buildSegment(_tiposAnimal[3]),
+          4: buildSegment(_tiposAnimal[4]),
+          5: buildSegment(_tiposAnimal[5]),
+          6: buildSegment(_tiposAnimal[6]),
+          7: buildSegment(_tiposAnimal[7]),
         },
         onValueChanged: (value) {
           setState(() {
-            groupValue = value;
+            _groupValue = value ?? 0;
+            _animaisFiltro = _animais
+                .where((animal) => animal.tipo == _tiposAnimal[_groupValue])
+                .toList();
+            inspect(_animaisFiltro);
           });
         },
       ),
@@ -137,6 +162,19 @@ class ListagemAnimaisPageState extends State<ListagemAnimaisPage> {
   }
 
   Widget _buildAnimalsGrid() {
+    return Container(
+        child: _animaisFiltro.length > 0
+            ? Column(
+                children: _animaisFiltro.map((e) => Text(e.nome)).toList(),
+              )
+            : Container(
+                padding: EdgeInsets.all(16),
+                child: const Text(
+                    'Não existem pets desse tipo para adoção no momento'),
+              ));
+  }
+
+  Widget _buildAnimalsGrid2() {
     return GridView.count(
       primary: false,
       padding: const EdgeInsets.all(0),
