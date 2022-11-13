@@ -1,4 +1,5 @@
 import 'package:adote_um_amigo/app/listagem-animais/listagem-animais_page.dart';
+import 'package:adote_um_amigo/app/listagem-animais/listagem-animais_page2.dart';
 import 'package:adote_um_amigo/app/meus-animais/meus-animais_page.dart';
 import 'package:adote_um_amigo/shared/BarraNavegacaoInferior.dart';
 import 'package:adote_um_amigo/shared/rotas.dart';
@@ -53,7 +54,9 @@ class MyApp extends StatelessWidget {
         Rotas.meusAnimais: (BuildContext context) =>
             const MeusAnimaisPage(title: 'MeusAnimais'),
         Rotas.listAnimals: (BuildContext context) =>
-            const ListagemAnimaisPage(),
+            const ListagemAnimaisPage(title: 'ListaDeAnimais'),
+        Rotas.listAnimals2: (BuildContext context) =>
+        const ListagemAnimaisPage2(title: 'ListaDeAnimais'),
       },
     );
   }
@@ -76,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
         sessaoAtiva = snapshot.data ?? false;
         return sessaoAtiva
-            ? const ListagemAnimaisPage()
+            ? const ListagemAnimaisPage2()
             : const loginUsuarioPage();
       },
     );
