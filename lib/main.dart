@@ -2,6 +2,7 @@ import 'package:adote_um_amigo/app/listagem-animais/listagem-animais_page.dart';
 import 'package:adote_um_amigo/app/listagem-animais/listagem-animais_page2.dart';
 import 'package:adote_um_amigo/app/meus-animais/meus-animais_page.dart';
 import 'package:adote_um_amigo/shared/BarraNavegacaoInferior.dart';
+import 'package:adote_um_amigo/app/tutorial/step_form.dart';
 import 'package:adote_um_amigo/shared/rotas.dart';
 import 'package:adote_um_amigo/shared/style.dart';
 import 'package:flutter/material.dart';
@@ -11,9 +12,7 @@ import 'app/registro-usuario/login.dart';
 import 'app/registro-usuario/criar-usuario.dart';
 import 'app/perfil-usuario/perfil-usuario_page.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -40,7 +39,7 @@ class MyApp extends StatelessWidget {
               color: Cores.texto, fontSize: 12, fontStyle: FontStyle.normal),
         ),
       ),
-      home: const MyHomePage(title: 'Adote um Amigo'),
+      home: StepForm(),
       // definir as rotas para cada página aqui
       routes: <String, WidgetBuilder>{
         Rotas.cadastroAnimal: (BuildContext context) =>

@@ -1,6 +1,8 @@
+import 'package:adote_um_amigo/models/usuario.dart';
 import 'package:flutter/material.dart';
 import 'package:adote_um_amigo/shared/rotas.dart';
 import 'package:adote_um_amigo/shared/style.dart';
+import 'package:adote_um_amigo/shared/db_service.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key, required this.title}) : super(key: key);
@@ -12,7 +14,18 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
+  final _conUserId = TextEditingController();
+  final _conUserName = TextEditingController();
+  final _conUserPassword = TextEditingController();
+  final _conUserEmail = TextEditingController();
   var rememberValue = false;
+  var DbHelper = DataBaseService();
+
+  singUp() {
+    Usuario uModel =
+        Usuario(0, 'Luana', 'Luana', '123456', 0, 0, '', '', '', '');
+    DbHelper.insertUser(uModel);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +56,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       Expanded(
                         child: TextFormField(
                           maxLines: 1,
+                          controller: _conUserName,
                           decoration: InputDecoration(
                             hintText: 'Nome Completo',
                             prefixIcon: const Icon(Icons.person),
@@ -58,6 +72,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     height: 20,
                   ),
                   TextFormField(
+                    controller: _conUserEmail,
                     decoration: InputDecoration(
                       hintText: 'Insira seu email',
                       prefixIcon: const Icon(Icons.email),
@@ -70,6 +85,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     height: 20,
                   ),
                   TextFormField(
+                    controller: _conUserPassword,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Insira uma senha';
@@ -90,9 +106,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     height: 20,
                   ),
                   ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {}
-                    },
+                    onPressed: singUp(),
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.fromLTRB(40, 15, 40, 15),
                     ),
