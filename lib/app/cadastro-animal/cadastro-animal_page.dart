@@ -2,10 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:adote_um_amigo/models/animal.dart';
+import 'package:adote_um_amigo/shared/db_service.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../models/tipo-animal-enum.dart';
 import '../../shared/style.dart';
 import 'package:adote_um_amigo/shared/rotas.dart';
 import 'package:adote_um_amigo/app/perfil-animal/perfil-animal_page.dart';
@@ -74,6 +76,7 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildFieldNome(),
+          _buildFieldTipo(),
           Row(
             children: [
               _buildFieldRaca(),
@@ -104,6 +107,38 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
         _animal.nome = value;
         return null;
       },
+    );
+  }
+
+  Widget _buildFieldTipo() {
+    return DropdownButtonFormField(
+      value: _animal.tipo,
+      hint: const Text('Tipo',
+          style: TextStyle(
+              color: Cores.texto, fontSize: 16, fontStyle: FontStyle.normal)),
+      isExpanded: true,
+      onChanged: (value) {
+        setState(() {
+          _animal.tipo = value.toString();
+        });
+      },
+      validator: (String? value) {
+        if (value == null || value.isEmpty) {
+          return "Escolha um tipo";
+        } else {
+          return null;
+        }
+      },
+      items: TipoAnimal().toList().map((String val) {
+        return DropdownMenuItem(
+          value: val,
+          child: Text(
+            val,
+            style: const TextStyle(
+                color: Cores.texto, fontSize: 16, fontStyle: FontStyle.normal),
+          ),
+        );
+      }).toList(),
     );
   }
 
@@ -433,8 +468,9 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
             ),
             onPressed: () {
               if (_formKey.currentState!.validate()) {
+                _animal.donoId = 1;
+                DataBaseService().insertAnimal(_animal);
                 Navigator.pushNamed(context, Rotas.listAnimals);
-                // fazer upload
                 showModalBottomSheet(
                   isScrollControlled: true,
                   context: context,

@@ -1,3 +1,5 @@
+import 'package:adote_um_amigo/models/tipo-animal-enum.dart';
+
 class Animal {
   late int id;
   late String nome;
@@ -7,7 +9,7 @@ class Animal {
   late int idade;
   late var fotos = <String>[]; // base64
   late int donoId;
-  late String tipo;
+  late String tipo = TipoAnimal.Null;
 
   Animal.empty();
 

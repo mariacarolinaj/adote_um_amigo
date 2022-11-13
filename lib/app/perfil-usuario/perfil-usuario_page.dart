@@ -1,15 +1,12 @@
+import 'dart:developer';
 import 'dart:io';
 
-import 'package:adote_um_amigo/models/animal.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:adote_um_amigo/models/usuario.dart';
+import 'package:adote_um_amigo/shared/db_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../shared/rotas.dart';
-import '../../shared/style.dart';
-import 'NumbersWidget.dart';
 
 class PerfilUsuarioPage extends StatefulWidget {
   final String title;
@@ -24,9 +21,12 @@ class PerfilUsuarioPage extends StatefulWidget {
 class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
   final double coverHeight = 280;
   final double profileHeight = 144;
+  Usuario user = Usuario.empty();
 
   @override
   Widget build(BuildContext context) {
+    DataBaseService().getUserById(1).then((value) => user = value);
+
     return Scaffold(
       body: ListView(
         padding: EdgeInsets.zero,
@@ -84,6 +84,7 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
           const SizedBox(height: 8),
           Text(
             'Ana',
+            // user.nome, liberarBD
             style: TextStyle(
                 fontSize: 28, color: Colors.black, fontWeight: FontWeight.bold),
           ),
@@ -91,6 +92,7 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
           Container(
             child: Text(
               'Somos uma instituição de caridade, onde nosso proposito é buscar animais que foram abonados e encontar um novo lar para os animaiszinhos!',
+              // user.apresentacao, liberarBD
               textDirection: TextDirection.ltr,
               style: TextStyle(
                   fontSize: 14,
@@ -107,23 +109,21 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
               SizedBox(width: 12),
               buildSocialIcon(FontAwesomeIcons.searchLocation,
                   Rotas.meusAnimais), //adicionar rota de localizacao
-              SizedBox(width: 12),
-              buildSocialIcon(FontAwesomeIcons.star,
-                  Rotas.meusAnimais), //adicionar rota de quantas estrelas
+              // SizedBox(width: 12),
+              // buildSocialIcon(FontAwesomeIcons.star,
+              //     Rotas.meusAnimais), //adicionar rota de quantas estrelas
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 5),
+          // const SizedBox(height: 16),
+          // NumbersWidget(),
+          const SizedBox(height: 10),
           Divider(),
           const SizedBox(height: 16),
-          NumbersWidget(),
-          const SizedBox(height: 16),
-          Divider(),
-          const SizedBox(height: 16),
-          buildAbout(),
-          const SizedBox(height: 32),
           buildMyAnimal(),
-          const SizedBox(height: 32),
+          const SizedBox(height: 16),
           _logout(),
+          const SizedBox(height: 16),
         ],
       );
 
@@ -138,21 +138,6 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
             onTap: () => Navigator.pushNamed(context, rotas),
             child: Center(child: Icon(icon, size: 32)),
           ),
-        ),
-      );
-
-  //botao para entrar em contato com um usuario
-  Widget buildAbout() => Container(
-        child: TextButton(
-          style: TextButton.styleFrom(
-              backgroundColor: Colors.orangeAccent,
-              elevation: 30,
-              shadowColor: Colors.green),
-          child: Text(
-            'Entrar em contato',
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-          ),
-          onPressed: () {}, //colocar rota do chat
         ),
       );
 

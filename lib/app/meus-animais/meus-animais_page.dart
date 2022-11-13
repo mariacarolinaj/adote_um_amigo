@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../models/animal.dart';
+import '../../models/tipo-animal-enum.dart';
+import '../../shared/db_service.dart';
 import '../../shared/rotas.dart';
 
 class MeusAnimaisPage extends StatelessWidget {
@@ -15,12 +18,9 @@ class MeusAnimaisPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: TextButton(
-            child: Text(
-              'Meus animais',
-              style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
-            ),
-            onPressed: () => Navigator.pushNamed(context, Rotas.perfilUsuario)
+        title: Text(
+          'Meus animais',
+          style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.orangeAccent,
       ),
@@ -33,9 +33,38 @@ class MeusAnimaisPage extends StatelessWidget {
 class MeusAnimaisPageStateless extends StatelessWidget{
   final double coverHeight = 280;
   final double profileHeight = 144;
+  List<Animal> myanimals = [];
+
+  //dados para teste
+  Animal an = Animal(02, "baluu", "pit", "manso", "em dia", 1, [], 01, TipoAnimal.Cachorro);
+  Animal an2 = Animal(02, "bob", "pit", "manso", "em dia", 1, [], 01, TipoAnimal.Cachorro);
+
 
   @override
   Widget build(BuildContext context) {
+
+    myanimals.add(an);
+    myanimals.add(an2);
+    // DataBaseService()..getAnimalByUserId(1).then((value) => myanimals = value);
+    DataBaseService().getAllAnimal().then((value) => myanimals = value);
+
+
+    return Container(
+          child: myanimals.length > 0
+              ? Column(
+            children: myanimals.map((e) =>
+                _buildAnimalsGrid(e),
+            ).toList(),
+          )
+              : Container(
+            padding: EdgeInsets.all(16),
+            child: const Text(
+                'Não existem pets em sua lista'),
+          ));
+    }
+
+  Widget _buildAnimalsGrid(Animal animal) {
+    // var localizacao pegar o usuario a partir do animal
     return Column(
       children: [
         ListTile(
@@ -43,95 +72,16 @@ class MeusAnimaisPageStateless extends StatelessWidget{
             backgroundImage: NetworkImage('https://cdn.pixabay.com/photo/2018/08/12/16/59/parrot-3601194_960_720.jpg'),
           ),
           title: Text(
-              'Lupi',
+              animal.nome,
             style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
           ),
           subtitle: Text(
-              'Localizado em BH, é uma Arara-canindé.',
+              'Localizado em BH',
             style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold),
           ),
         ),
         const SizedBox(height: 4),
         Divider(),
-
-        ListTile(
-          leading: CircleAvatar(
-            backgroundImage: NetworkImage('https://cdn.pixabay.com/photo/2014/11/30/14/11/cat-551554_960_720.jpg'),
-          ),
-          title: Text(
-            'Balu',
-            style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
-          ),
-          subtitle: Text(
-            'Localizado em BH, é um gato da raça Angorá turco',
-            style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold),
-          ),
-        ),
-        const SizedBox(height: 4),
-        Divider(),
-
-        ListTile(
-          leading: CircleAvatar(
-            backgroundImage: NetworkImage('https://cdn.pixabay.com/photo/2017/12/10/15/16/white-horse-3010129_960_720.jpg'),
-          ),
-          title: Text(
-              'Thor',
-            style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
-          ),
-          subtitle: Text(
-            'Localizado em SP, é um cavalo da raça Mangalarga',
-          style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold),
-          ),
-        ),
-        const SizedBox(height: 4),
-        Divider(),
-
-        ListTile(
-          leading: CircleAvatar(
-            backgroundImage: NetworkImage('https://cdn.pixabay.com/photo/2014/11/30/14/11/cat-551554_960_720.jpg'),
-          ),
-          title: Text(
-            'Balu',
-            style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
-          ),
-          subtitle: Text(
-            'Localizado em BH, é um gato da raça Angorá turco',
-            style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold),
-          ),
-        ),
-        const SizedBox(height: 4),
-        Divider(),
-
-        ListTile(
-          leading: CircleAvatar(
-            backgroundImage: NetworkImage('https://cdn.pixabay.com/photo/2014/11/30/14/11/cat-551554_960_720.jpg'),
-          ),
-          title: Text(
-            'Balu',
-            style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
-          ),
-          subtitle: Text(
-            'Localizado em BH, é um gato da raça Angorá turco',
-            style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold),
-          ),
-        ),
-        const SizedBox(height: 4),
-        Divider(),
-
-        ListTile(
-          leading: CircleAvatar(
-            backgroundImage: NetworkImage('https://cdn.pixabay.com/photo/2014/11/30/14/11/cat-551554_960_720.jpg'),
-          ),
-          title: Text(
-            'Balu',
-            style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
-          ),
-          subtitle: Text(
-            'Localizado em BH, é um gato da raça Angorá turco',
-            style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold),
-          ),
-        ),
-
       ],
     );
   }

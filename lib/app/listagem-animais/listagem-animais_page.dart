@@ -1,13 +1,19 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:adote_um_amigo/models/animal.dart';
+import 'package:adote_um_amigo/models/tipo-animal-enum.dart';
+import 'package:adote_um_amigo/shared/db_service.dart';
 import 'package:adote_um_amigo/shared/rotas.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../models/usuario.dart';
+import '../../shared/BarraNavegacaoInferior.dart';
 import '../../shared/style.dart';
+import '../perfil-animal/perfil-animal_page.dart';
 
 class ListagemAnimaisPage extends StatefulWidget {
   final String title;
@@ -18,22 +24,46 @@ class ListagemAnimaisPage extends StatefulWidget {
 }
 
 class ListagemAnimaisPageState extends State<ListagemAnimaisPage> {
-  int? groupValue = 0;
+  int _groupValue = 0;
+  final List<String> _tiposAnimal = [
+    TipoAnimal.Cachorro,
+    TipoAnimal.Gato,
+    TipoAnimal.Coelho,
+    TipoAnimal.Roedor,
+    TipoAnimal.Outros
+  ];
+
+  //dados para teste
+  Animal an = Animal(02, "baluu", "pit", "manso", "em dia", 1, [], 01, TipoAnimal.Cachorro);
+  Animal an2 = Animal(02, "bob", "pit", "manso", "em dia", 1, [], 01, TipoAnimal.Cachorro);
+  Usuario us = Usuario(1, "duda", "email", "password", 0, 0, "31", "null", "imagemCapa", "apresentacao");
+
+  List<Animal> _animais = [];
+  List<Animal> _animaisFiltro = [];
+  Usuario _user = Usuario.empty();
 
   @override
   Widget build(BuildContext context) {
+    // _animaisFiltro.add(an);
+    // _animaisFiltro.add(an2);
+    // var num = DataBaseService().insertUser(Usuario(1, "duda", "email", "password", 0, 0, "31", "null", "imagemCapa", "apresentacao"));
+    DataBaseService().getUserById(1).then((value) => _user = value);
+    DataBaseService().getAllAnimal().then((value) => _animais = value);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Padding(
         padding: const EdgeInsets.only(top: 32, left: 16, right: 16),
         child: Column(
           children: <Widget>[
+            // _buildHeader(_user.nome), liberarBD
             _buildHeader("Robson"),
             _buildHeaderMessage(),
             _buildSegmentControl(),
+            _buildAnimalsGrid(),
           ],
         ),
       ),
+      // bottomNavigationBar: BarraNavegacaoInferior(),
     );
   }
 
@@ -113,21 +143,26 @@ class ListagemAnimaisPageState extends State<ListagemAnimaisPage> {
   Widget _buildSegmentControl() {
     return Container(
       alignment: Alignment.center,
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(1),
       child: CupertinoSlidingSegmentedControl<int>(
         backgroundColor: Cores.secondary,
-        thumbColor: Colors.yellow,
-        padding: EdgeInsets.all(8),
-        groupValue: groupValue,
+        thumbColor: Colors.orangeAccent,
+        padding: const EdgeInsets.all(8),
+        groupValue: _groupValue,
         children: {
-          0: buildSegment("Cão"),
-          1: buildSegment("Gato"),
-          2: buildSegment("Coelho"),
-          3: buildSegment("Hamster")
+          0: buildSegment(_tiposAnimal[0]),
+          1: buildSegment(_tiposAnimal[1]),
+          2: buildSegment(_tiposAnimal[2]),
+          3: buildSegment(_tiposAnimal[3]),
+          7: buildSegment(_tiposAnimal[4]),
         },
         onValueChanged: (value) {
           setState(() {
-            groupValue = value;
+            _groupValue = value ?? 0;
+            _animaisFiltro = _animais
+                .where((animal) => animal.tipo == _tiposAnimal[_groupValue])
+                .toList();
+            inspect(_animaisFiltro);
           });
         },
       ),
@@ -135,44 +170,60 @@ class ListagemAnimaisPageState extends State<ListagemAnimaisPage> {
   }
 
   Widget _buildAnimalsGrid() {
-    return GridView.count(
-      primary: false,
-      padding: const EdgeInsets.all(0),
-      crossAxisSpacing: 10,
-      mainAxisSpacing: 10,
-      crossAxisCount: 2,
-      children: <Widget>[
-        Container(
-          padding: const EdgeInsets.all(8),
-          color: Colors.teal[100],
-          child: const Text("He'd have you all unravel at the"),
-        ),
-        Container(
-          padding: const EdgeInsets.all(8),
-          color: Colors.teal[200],
-          child: const Text('Heed not the rabble'),
-        ),
-        Container(
-          padding: const EdgeInsets.all(8),
-          color: Colors.teal[300],
-          child: const Text('Sound of screams but the'),
-        ),
-        Container(
-          padding: const EdgeInsets.all(8),
-          color: Colors.teal[400],
-          child: const Text('Who scream'),
-        ),
-        Container(
-          padding: const EdgeInsets.all(8),
-          color: Colors.teal[500],
-          child: const Text('Revolution is coming...'),
-        ),
-        Container(
-          padding: const EdgeInsets.all(8),
-          color: Colors.teal[600],
-          child: const Text('Revolution, they...'),
-        ),
-      ],
+    return Container(
+        child: _animaisFiltro.length > 0
+            ? Column(
+                children: _animaisFiltro.map((e) =>
+                    buildAnimal(e),
+                ).toList(),
+              )
+            : Container(
+                padding: EdgeInsets.all(16),
+                child: const Text(
+                    'Não existem pets desse tipo para adoção no momento'),
+              ));
+  }
+
+  Widget _buildProfileImageAnimal(Animal animal) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width / 8,
+      child: Column(
+        children: [
+          FloatingActionButton(
+              backgroundColor: Colors.transparent,
+              onPressed: () {
+                Navigator.pushNamed(context, Rotas.listAnimals);
+                showModalBottomSheet(
+                  isScrollControlled: true,
+                  context: context,
+                  builder: (BuildContext context) {
+                    return PerfilAnimalPage(animal);
+                  },
+                );
+              },
+              child: CircleAvatar(
+                backgroundImage: NetworkImage('https://cdn.pixabay.com/photo/2018/08/12/16/59/parrot-3601194_960_720.jpg'),
+              ),
+          ),
+        ],
+        crossAxisAlignment: CrossAxisAlignment.end,
+      ),
     );
   }
+
+  Widget buildAnimal(Animal animal) {
+    var idade = animal.idade;
+    return ListTile(
+      leading: _buildProfileImageAnimal(animal),
+      title: Text(
+        animal.nome,
+        style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
+      ),
+      subtitle: Text(
+        'Pet da raça ' + animal.raca + ' com idade $idade',
+        style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+
 }
