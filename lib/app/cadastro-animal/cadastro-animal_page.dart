@@ -94,8 +94,7 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
 
   Widget _buildFieldNome() {
     return TextFormField(
-      style: const TextStyle(
-          color: Cores.texto, fontSize: 16, fontStyle: FontStyle.normal),
+      style: Style().inputTextStyle,
       decoration: const InputDecoration(
         border: UnderlineInputBorder(),
         labelText: 'Nome',
@@ -113,9 +112,10 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
   Widget _buildFieldTipo() {
     return DropdownButtonFormField(
       value: _animal.tipo,
-      hint: const Text('Tipo',
-          style: TextStyle(
-              color: Cores.texto, fontSize: 16, fontStyle: FontStyle.normal)),
+      hint: Text(
+        'Tipo',
+        style: Style().inputTextStyle,
+      ),
       isExpanded: true,
       onChanged: (value) {
         setState(() {
@@ -134,8 +134,7 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
           value: val,
           child: Text(
             val,
-            style: const TextStyle(
-                color: Cores.texto, fontSize: 16, fontStyle: FontStyle.normal),
+            style: Style().inputTextStyle,
           ),
         );
       }).toList(),
@@ -146,8 +145,7 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.5,
       child: TextFormField(
-        style: const TextStyle(
-            color: Cores.texto, fontSize: 16, fontStyle: FontStyle.normal),
+        style: Style().inputTextStyle,
         decoration: const InputDecoration(
           border: UnderlineInputBorder(),
           labelText: 'Raça',
@@ -172,8 +170,7 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
         inputFormatters: <TextInputFormatter>[
           FilteringTextInputFormatter.digitsOnly
         ],
-        style: const TextStyle(
-            color: Cores.texto, fontSize: 16, fontStyle: FontStyle.normal),
+        style: Style().inputTextStyle,
         decoration: const InputDecoration(
           border: UnderlineInputBorder(),
           labelText: 'Idade',
@@ -191,8 +188,7 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
 
   Widget _buildFieldCaracteristicas() {
     return TextFormField(
-      style: const TextStyle(
-          color: Cores.texto, fontSize: 16, fontStyle: FontStyle.normal),
+      style: Style().inputTextStyle,
       decoration: const InputDecoration(
         border: UnderlineInputBorder(),
         labelText: 'Características',
@@ -211,8 +207,7 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
 
   Widget _buildFieldVacinas() {
     return TextFormField(
-      style: const TextStyle(
-          color: Cores.texto, fontSize: 16, fontStyle: FontStyle.normal),
+      style: Style().inputTextStyle,
       decoration: const InputDecoration(
         border: UnderlineInputBorder(),
         labelText: 'Vacinas',
@@ -261,11 +256,10 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
       context: context,
       builder: (BuildContext context) {
         return SimpleDialog(
-          title: const Text(
+          title: Text(
             'Adicionar fotos',
             textAlign: TextAlign.center,
-            style: TextStyle(
-                color: Cores.titulo, fontSize: 16, fontStyle: FontStyle.normal),
+            style: Style().inputTextStyle,
           ),
           children: <Widget>[
             Center(

@@ -147,8 +147,7 @@ class _RegisterPageState extends State<RegisterPage> {
       keyboardType: TextInputType.visiblePassword,
       maxLines: 1,
       obscureText: true,
-      style: const TextStyle(
-          color: Cores.texto, fontSize: 16, fontStyle: FontStyle.normal),
+      style: Style().inputTextStyle,
       decoration: const InputDecoration(
         prefixIcon: Icon(Icons.lock),
         hintText: 'Insira uma senha',
@@ -159,8 +158,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   TextFormField _buildFieldEmail() {
     return TextFormField(
-      style: const TextStyle(
-          color: Cores.texto, fontSize: 16, fontStyle: FontStyle.normal),
+      style: Style().inputTextStyle,
       decoration: const InputDecoration(
         hintText: 'E-mail',
         prefixIcon: Icon(Icons.email),
@@ -191,8 +189,7 @@ class _RegisterPageState extends State<RegisterPage> {
   TextFormField _buildFieldNome() {
     return TextFormField(
       maxLines: 1,
-      style: const TextStyle(
-          color: Cores.texto, fontSize: 16, fontStyle: FontStyle.normal),
+      style: Style().inputTextStyle,
       decoration: const InputDecoration(
         hintText: 'Nome',
         prefixIcon: Icon(Icons.person),
@@ -213,8 +210,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return TextFormField(
       maxLines: 1,
       keyboardType: TextInputType.phone,
-      style: const TextStyle(
-          color: Cores.texto, fontSize: 16, fontStyle: FontStyle.normal),
+      style: Style().inputTextStyle,
       decoration: const InputDecoration(
         hintText: 'Telefone',
         prefixIcon: Icon(Icons.phone),
@@ -236,8 +232,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget _buildFieldApresentacao() {
     return TextFormField(
       maxLength: 300,
-      style: const TextStyle(
-          color: Cores.texto, fontSize: 16, fontStyle: FontStyle.normal),
+      style: Style().inputTextStyle,
       decoration: const InputDecoration(
         prefixIcon: Icon(Icons.star),
         border: UnderlineInputBorder(),
@@ -298,11 +293,10 @@ class _RegisterPageState extends State<RegisterPage> {
       context: context,
       builder: (BuildContext context) {
         return SimpleDialog(
-          title: const Text(
+          title: Text(
             'Escolher foto',
             textAlign: TextAlign.center,
-            style: TextStyle(
-                color: Cores.titulo, fontSize: 16, fontStyle: FontStyle.normal),
+            style: Style().inputTextStyle,
           ),
           children: <Widget>[
             Center(

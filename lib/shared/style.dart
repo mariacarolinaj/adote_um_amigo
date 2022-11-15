@@ -10,3 +10,8 @@ class Cores {
   static const textoBotaoSecundario = Color.fromARGB(255, 50, 183, 104);
   static const erro = Colors.red;
 }
+
+class Style {
+  TextStyle inputTextStyle = const TextStyle(
+      color: Cores.texto, fontSize: 16, fontStyle: FontStyle.normal);
+}
