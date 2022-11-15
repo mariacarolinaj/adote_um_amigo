@@ -91,8 +91,11 @@ class ListagemAnimaisPageState extends State<ListagemAnimaisPage> {
               },
               child: CircleAvatar(
                 radius: 32,
-                backgroundImage:
-                    ImagemService().toImage(_user.imagemPerfil).image,
+                backgroundImage: _user.imagemPerfil.isEmpty
+                    ? Image.network(
+                            'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png')
+                        .image
+                    : ImagemService().toImage(_user.imagemPerfil).image,
               )),
         ],
       ),

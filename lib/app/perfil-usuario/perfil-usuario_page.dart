@@ -82,7 +82,11 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
   Widget buildProfileImage() => CircleAvatar(
         radius: profileHeight / 2,
         backgroundColor: Colors.grey.shade800,
-        backgroundImage: ImagemService().toImage(user.imagemPerfil).image,
+        backgroundImage: user.imagemPerfil.isEmpty
+            ? Image.network(
+                    'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png')
+                .image
+            : ImagemService().toImage(user.imagemPerfil).image,
       );
 
   Widget buildContent() => Column(
