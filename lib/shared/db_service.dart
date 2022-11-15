@@ -143,6 +143,37 @@ class DataBaseService {
     return user;
   }
 
+  Future<Usuario> getUserByEmailESenha(String email, String senha) async {
+    Database bd = await _getDB();
+    var response = await bd.query("usuario",
+        columns: [
+          "id",
+          "nome",
+          "email",
+          "imagemPerfil",
+          "imagemCapa",
+          "apresentacao",
+          "password",
+          "latGeo",
+          "lonGeo",
+          "telefone"
+        ],
+        where: "email = ? and password = ?",
+        whereArgs: [email, senha]);
+
+    if (response.isEmpty) {
+      log("Resultado da busca pelo usuário por email e senha não retornou resultado");
+      return Usuario.empty();
+    }
+
+    Usuario user = Usuario.fromMap(response.first);
+
+    log("Resultado da busca pelo usuário by email e senha:");
+    inspect(user);
+
+    return user;
+  }
+
   Future<List<Animal>> getAllAnimal() async {
     Database bd = await _getDB();
     String sql = "SELECT a.id, "
