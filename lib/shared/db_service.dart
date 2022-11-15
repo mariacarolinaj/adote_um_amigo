@@ -1,7 +1,9 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:adote_um_amigo/models/interesse.dart';
 import 'package:adote_um_amigo/models/usuario.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../models/animal.dart';
@@ -357,5 +359,11 @@ class DataBaseService {
     final localBancoDados = join(caminhoBancoDados, "banco.bd");
     databaseFactory.deleteDatabase(localBancoDados);
     log("Base de dados deletada.");
+  }
+
+  Future<Usuario> getUsuarioLogado() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userString = prefs.getString('usuario');
+    return Usuario.fromJson(jsonDecode(userString!) as Map<String, dynamic>);
   }
 }

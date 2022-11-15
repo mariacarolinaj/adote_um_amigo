@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:adote_um_amigo/models/usuario.dart';
 import 'package:adote_um_amigo/shared/db_service.dart';
+import 'package:adote_um_amigo/shared/imagem_service.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,9 +25,16 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
   Usuario user = Usuario.empty();
 
   @override
-  Widget build(BuildContext context) {
-    DataBaseService().getUserById(1).then((value) => user = value);
+  initState() {
+    super.initState();
+    DataBaseService().getUsuarioLogado().then((result) {
+      user = result;
+      setState(() {});
+    });
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(
         padding: EdgeInsets.zero,
@@ -74,32 +82,28 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
   Widget buildProfileImage() => CircleAvatar(
         radius: profileHeight / 2,
         backgroundColor: Colors.grey.shade800,
-        backgroundImage: NetworkImage(
-          'https://cdn.pixabay.com/photo/2018/01/06/09/25/hijab-3064633_960_720.jpg',
-        ),
+        backgroundImage: ImagemService().toImage(user.imagemPerfil).image,
       );
 
   Widget buildContent() => Column(
         children: [
           const SizedBox(height: 8),
           Text(
-            'Ana',
-            // user.nome, liberarBD
+            user.nome,
             style: TextStyle(
                 fontSize: 28, color: Colors.black, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Container(
+            margin: EdgeInsets.only(left: 32, right: 32),
             child: Text(
-              'Somos uma instituição de caridade, onde nosso proposito é buscar animais que foram abonados e encontar um novo lar para os animaiszinhos!',
-              // user.apresentacao, liberarBD
+              user.apresentacao,
               textDirection: TextDirection.ltr,
-              style: TextStyle(
+              style: const TextStyle(
                   fontSize: 14,
                   color: Colors.black,
                   fontWeight: FontWeight.bold),
             ),
-            margin: EdgeInsets.only(left: 32, right: 32),
           ),
           const SizedBox(height: 16),
           Row(
