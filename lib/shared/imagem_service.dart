@@ -13,6 +13,7 @@ class ImagemService {
   }
 
   Image toImage(String base64) {
-    return Image.memory(const Base64Decoder().convert(base64));
+    return Image.memory(const Base64Decoder().convert(base64),
+        gaplessPlayback: true);
   }
 }
