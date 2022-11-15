@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:adote_um_amigo/models/usuario.dart';
 import 'package:adote_um_amigo/shared/db_service.dart';
+import 'package:adote_um_amigo/shared/imagem_service.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,9 +25,16 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
   Usuario user = Usuario.empty();
 
   @override
-  Widget build(BuildContext context) {
-    DataBaseService().getUserById(1).then((value) => user = value);
+  initState() {
+    super.initState();
+    DataBaseService().getUsuarioLogado().then((result) {
+      user = result;
+      setState(() {});
+    });
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(
         padding: EdgeInsets.zero,
@@ -74,39 +82,40 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
   Widget buildProfileImage() => CircleAvatar(
         radius: profileHeight / 2,
         backgroundColor: Colors.grey.shade800,
-        backgroundImage: NetworkImage(
-          'https://cdn.pixabay.com/photo/2018/01/06/09/25/hijab-3064633_960_720.jpg',
-        ),
+        backgroundImage: user.imagemPerfil.isEmpty
+            ? Image.network(
+                    'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png')
+                .image
+            : ImagemService().toImage(user.imagemPerfil).image,
       );
 
   Widget buildContent() => Column(
         children: [
           const SizedBox(height: 8),
           Text(
-            'Ana',
-            // user.nome, liberarBD
-            style: TextStyle(
-                fontSize: 28, color: Colors.black, fontWeight: FontWeight.bold),
+            user.nome,
+            style: const TextStyle(
+                fontSize: 28, color: Colors.black, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 8),
           Container(
+            margin: const EdgeInsets.only(left: 32, right: 32),
             child: Text(
-              'Somos uma instituição de caridade, onde nosso proposito é buscar animais que foram abonados e encontar um novo lar para os animaiszinhos!',
-              // user.apresentacao, liberarBD
+              user.apresentacao,
+              textAlign: TextAlign.center,
               textDirection: TextDirection.ltr,
-              style: TextStyle(
+              style: const TextStyle(
                   fontSize: 14,
                   color: Colors.black,
-                  fontWeight: FontWeight.bold),
+                  fontWeight: FontWeight.w500),
             ),
-            margin: EdgeInsets.only(left: 32, right: 32),
           ),
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               buildSocialIcon(FontAwesomeIcons.dog, Rotas.meusAnimais),
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
               buildSocialIcon(FontAwesomeIcons.searchLocation,
                   Rotas.meusAnimais), //adicionar rota de localizacao
               // SizedBox(width: 12),
@@ -118,7 +127,7 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
           // const SizedBox(height: 16),
           // NumbersWidget(),
           const SizedBox(height: 10),
-          Divider(),
+          const Divider(),
           const SizedBox(height: 16),
           buildMyAnimal(),
           const SizedBox(height: 16),
@@ -131,7 +140,7 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
   Widget buildSocialIcon(IconData icon, String rotas) => CircleAvatar(
         radius: 25,
         child: Material(
-          shape: CircleBorder(),
+          shape: const CircleBorder(),
           clipBehavior: Clip.hardEdge,
           color: Colors.transparent,
           child: InkWell(
@@ -148,7 +157,7 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
               backgroundColor: Colors.orangeAccent,
               elevation: 30,
               shadowColor: Colors.green),
-          child: Text(
+          child: const Text(
             'Meus animais de interesse',
             style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
           ),
@@ -162,7 +171,7 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
               backgroundColor: Colors.orangeAccent,
               elevation: 30,
               shadowColor: Colors.green),
-          child: Text(
+          child: const Text(
             'Logout',
             style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
           ),

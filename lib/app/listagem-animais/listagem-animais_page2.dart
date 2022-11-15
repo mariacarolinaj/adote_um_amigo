@@ -24,10 +24,8 @@ class ListagemAnimaisPage2 extends StatefulWidget {
 }
 
 class ListagemAnimaisPage2State extends State<ListagemAnimaisPage2> {
-
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Padding(
@@ -35,7 +33,5 @@ class ListagemAnimaisPage2State extends State<ListagemAnimaisPage2> {
       ),
       bottomNavigationBar: BarraNavegacaoInferior(),
     );
-
   }
-
 }

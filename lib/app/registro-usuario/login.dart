@@ -1,7 +1,12 @@
+import 'dart:convert';
+
+import 'package:adote_um_amigo/shared/db_service.dart';
 import 'package:flutter/material.dart';
 import 'package:adote_um_amigo/shared/rotas.dart';
 import 'package:adote_um_amigo/shared/style.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../models/usuario.dart';
 
 class loginUsuarioPage extends StatefulWidget {
   final String title;
@@ -12,10 +17,22 @@ class loginUsuarioPage extends StatefulWidget {
 }
 
 class loginUsuarioPageState extends State<loginUsuarioPage> {
-  @override
   final _formKey = GlobalKey<FormState>();
-  var rememberValue = false;
-  var email, senha;
+  late String _email, _senha;
+
+  @override
+  initState() {
+    super.initState();
+    SharedPreferences.getInstance().then(
+      (result) {
+        SharedPreferences prefs = result;
+        bool sessaoAtiva = prefs.getBool('sessaoAtiva') ?? false;
+        if (sessaoAtiva) {
+          Navigator.pushNamed(context, Rotas.listAnimals2);
+        }
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,62 +56,30 @@ class loginUsuarioPageState extends State<loginUsuarioPage> {
               ),
               Form(
                 key: _formKey,
-                autovalidateMode: AutovalidateMode.always,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 child: Column(
                   children: [
-                    TextFormField(
-                      maxLines: 1,
-                      decoration: InputDecoration(
-                        hintText: 'Insira seu Email',
-                        prefixIcon: const Icon(Icons.email),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Insira seu e-mail';
-                        }
-                        email = value;
-
-                        return null;
-                      },
-                    ),
+                    _buildFieldEmail(),
                     const SizedBox(
                       height: 20,
                     ),
-                    TextFormField(
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Insira sua senha';
-                        }
-                        senha = value;
-
-                        return null;
-                      },
-                      maxLines: 1,
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.lock),
-                        hintText: 'Insira sua senha',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                    ),
+                    _buildFieldSenha(),
                     const SizedBox(
                       height: 20,
                     ),
                     ElevatedButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          await _salvarDadosDeSessao();
-                          Navigator.pushNamed(context, Rotas.cadastroAnimal);
+                          await _validarLogin();
                         }
                       },
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.fromLTRB(40, 15, 40, 15),
-                      ),
+                        backgroundColor: Cores.primaria,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0)),
                       child: const Text(
                         'Entrar',
                         style: TextStyle(
@@ -108,14 +93,15 @@ class loginUsuarioPageState extends State<loginUsuarioPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        const Text('Ainda não possui uma conta?'),
                         TextButton(
                           onPressed: () {
                             Navigator.pushNamed(context, Rotas.registroUsuario);
                           },
-                          child: const Text('Criar uma conta'),
+                          child: const Text('Cadastre-se agora'),
                         ),
                       ],
-                    ),
+                    )
                   ],
                 ),
               )
@@ -126,10 +112,95 @@ class loginUsuarioPageState extends State<loginUsuarioPage> {
     );
   }
 
-  Future<void> _salvarDadosDeSessao() async {
+  TextFormField _buildFieldSenha() {
+    return TextFormField(
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Insira sua senha';
+        }
+        _senha = value;
+        return null;
+      },
+      keyboardType: TextInputType.visiblePassword,
+      maxLines: 1,
+      obscureText: true,
+      style: Style().inputTextStyle,
+      decoration: const InputDecoration(
+        prefixIcon: Icon(Icons.lock),
+        border: UnderlineInputBorder(),
+        hintText: 'Senha',
+      ),
+    );
+  }
+
+  TextFormField _buildFieldEmail() {
+    return TextFormField(
+      maxLines: 1,
+      style: Style().inputTextStyle,
+      decoration: const InputDecoration(
+        hintText: 'E-mail',
+        prefixIcon: Icon(Icons.email),
+        border: UnderlineInputBorder(),
+      ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Insira seu e-mail';
+        }
+        if (!_emailValidator(value)) {
+          return 'E-mail inválido';
+        }
+        _email = value;
+        return null;
+      },
+    );
+  }
+
+  bool _emailValidator(String email) {
+    String pattern =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regExp = RegExp(pattern);
+
+    return regExp.hasMatch(email);
+  }
+
+  _validarLogin() async {
+    var user = await DataBaseService().getUserByEmailESenha(_email, _senha);
+    if (user.nome == null || user.nome == '') {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Ops!'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: const <Widget>[
+                  Text(
+                      'Não foi encontrado nenhum usuário com os dados informados.'),
+                  Text('Tente novamente.'),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Voltar'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      await _salvarDadosDeSessao(user);
+      Navigator.pushNamed(context, Rotas.listAnimals2);
+    }
+  }
+
+  Future<void> _salvarDadosDeSessao(Usuario usuario) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    //buscar dados do usuario nesse momento e armazenar dados básicos no shared preferences tambem.
+    String userString = jsonEncode(usuario.toJson());
+    await prefs.setString('usuario', userString);
     await prefs.setBool("sessaoAtiva", true);
-    await prefs.setString("email", email);
   }
 }

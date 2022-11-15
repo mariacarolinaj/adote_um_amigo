@@ -1,7 +1,9 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:adote_um_amigo/models/interesse.dart';
 import 'package:adote_um_amigo/models/usuario.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../models/animal.dart';
@@ -66,7 +68,7 @@ class DataBaseService {
 
     int id = await bd.insert("usuario", dados);
 
-    log("Usuário inserido. (ID: $id)");
+    print("Usuário inserido. (ID: $id)");
 
     return id;
   }
@@ -138,6 +140,37 @@ class DataBaseService {
     Usuario user = Usuario.fromMap(response.first);
 
     log("Resultado da busca pelo usuário by id:");
+    inspect(user);
+
+    return user;
+  }
+
+  Future<Usuario> getUserByEmailESenha(String email, String senha) async {
+    Database bd = await _getDB();
+    var response = await bd.query("usuario",
+        columns: [
+          "id",
+          "nome",
+          "email",
+          "imagemPerfil",
+          "imagemCapa",
+          "apresentacao",
+          "password",
+          "latGeo",
+          "lonGeo",
+          "telefone"
+        ],
+        where: "email = ? and password = ?",
+        whereArgs: [email, senha]);
+
+    if (response.isEmpty) {
+      log("Resultado da busca pelo usuário por email e senha não retornou resultado");
+      return Usuario.empty();
+    }
+
+    Usuario user = Usuario.fromMap(response.first);
+
+    log("Resultado da busca pelo usuário by email e senha:");
     inspect(user);
 
     return user;
@@ -326,5 +359,11 @@ class DataBaseService {
     final localBancoDados = join(caminhoBancoDados, "banco.bd");
     databaseFactory.deleteDatabase(localBancoDados);
     log("Base de dados deletada.");
+  }
+
+  Future<Usuario> getUsuarioLogado() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userString = prefs.getString('usuario');
+    return Usuario.fromJson(jsonDecode(userString!) as Map<String, dynamic>);
   }
 }

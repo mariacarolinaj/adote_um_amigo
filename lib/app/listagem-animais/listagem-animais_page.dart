@@ -1,17 +1,14 @@
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:adote_um_amigo/models/animal.dart';
 import 'package:adote_um_amigo/models/tipo-animal-enum.dart';
 import 'package:adote_um_amigo/shared/db_service.dart';
 import 'package:adote_um_amigo/shared/rotas.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
 import '../../models/usuario.dart';
 import '../../shared/BarraNavegacaoInferior.dart';
+import '../../shared/imagem_service.dart';
 import '../../shared/style.dart';
 import '../perfil-animal/perfil-animal_page.dart';
 
@@ -26,37 +23,40 @@ class ListagemAnimaisPage extends StatefulWidget {
 class ListagemAnimaisPageState extends State<ListagemAnimaisPage> {
   int _groupValue = 0;
   final List<String> _tiposAnimal = [
-    TipoAnimal.Cachorro,
     TipoAnimal.Gato,
-    TipoAnimal.Coelho,
+    TipoAnimal.Cachorro,
     TipoAnimal.Roedor,
     TipoAnimal.Outros
   ];
-
-  //dados para teste
-  Animal an = Animal(02, "baluu", "pit", "manso", "em dia", 1, [], 01, TipoAnimal.Cachorro);
-  Animal an2 = Animal(02, "bob", "pit", "manso", "em dia", 1, [], 01, TipoAnimal.Cachorro);
-  Usuario us = Usuario(1, "duda", "email", "password", 0, 0, "31", "null", "imagemCapa", "apresentacao");
-
+  Usuario _user = Usuario.empty();
   List<Animal> _animais = [];
   List<Animal> _animaisFiltro = [];
-  Usuario _user = Usuario.empty();
+
+  @override
+  initState() {
+    super.initState();
+    DataBaseService().getUsuarioLogado().then((result) {
+      _user = result;
+      setState(() {});
+    });
+    DataBaseService().getAllAnimal().then((value) {
+      _animais = value;
+      _animaisFiltro = _animais
+          .where((animal) => animal.tipo == _tiposAnimal[_groupValue])
+          .toList();
+      setState(() {});
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    // _animaisFiltro.add(an);
-    // _animaisFiltro.add(an2);
-    // var num = DataBaseService().insertUser(Usuario(1, "duda", "email", "password", 0, 0, "31", "null", "imagemCapa", "apresentacao"));
-    DataBaseService().getUserById(1).then((value) => _user = value);
-    DataBaseService().getAllAnimal().then((value) => _animais = value);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Padding(
         padding: const EdgeInsets.only(top: 32, left: 16, right: 16),
         child: Column(
           children: <Widget>[
-            // _buildHeader(_user.nome), liberarBD
-            _buildHeader("Robson"),
+            _buildHeader(),
             _buildHeaderMessage(),
             _buildSegmentControl(),
             _buildAnimalsGrid(),
@@ -67,22 +67,22 @@ class ListagemAnimaisPageState extends State<ListagemAnimaisPage> {
     );
   }
 
-  Widget _buildHeader(String name) {
+  Widget _buildHeader() {
     return Container(
+      margin: const EdgeInsets.only(top: 24, bottom: 0, left: 23, right: 23),
       child: Row(
         children: [
-          _buildTitleHeader(name),
+          _buildTitleHeader(),
           _buildProfileImage(),
         ],
       ),
-      margin: const EdgeInsets.only(top: 24, bottom: 0, left: 23, right: 23),
     );
   }
 
   Widget _buildProfileImage() {
     return SizedBox(
-      width: MediaQuery.of(context).size.width / 2,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           FloatingActionButton(
               backgroundColor: Colors.transparent,
@@ -90,36 +90,46 @@ class ListagemAnimaisPageState extends State<ListagemAnimaisPage> {
                 Navigator.of(context).pushNamed(Rotas.perfilUsuario);
               },
               child: CircleAvatar(
-                backgroundImage: NetworkImage(
-                    'https://pbs.twimg.com/media/EvHvTkCWQAA13pI.jpg'),
+                radius: 32,
+                backgroundImage: _user.imagemPerfil.isEmpty
+                    ? Image.network(
+                            'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png')
+                        .image
+                    : ImagemService().toImage(_user.imagemPerfil).image,
               )),
         ],
-        crossAxisAlignment: CrossAxisAlignment.end,
       ),
     );
   }
 
-  Widget _buildTitleHeader(String name) {
-    return RichText(
-      text: TextSpan(
-        text: 'Ola,\n',
-        style: TextStyle(
-            color: Cores.titulo,
-            fontSize: 32,
-            fontFamily: 'Jost',
-            fontStyle: FontStyle.normal),
-        children: <TextSpan>[
-          TextSpan(text: name, style: TextStyle(fontWeight: FontWeight.w700)),
-        ],
+  Widget _buildTitleHeader() {
+    return Container(
+      padding: const EdgeInsets.only(top: 8),
+      width: MediaQuery.of(context).size.width * 0.65,
+      child: RichText(
+        text: TextSpan(
+          text: 'Olá, ',
+          style: const TextStyle(
+              color: Cores.titulo,
+              fontSize: 32,
+              fontFamily: 'Jost',
+              fontStyle: FontStyle.normal),
+          children: <TextSpan>[
+            TextSpan(
+                text: _user.nome.split(" ").first,
+                style: const TextStyle(fontWeight: FontWeight.w700)),
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildHeaderMessage() {
     return Container(
+      margin: const EdgeInsets.only(top: 32, bottom: 24),
       child: RichText(
         text: const TextSpan(
-          text: 'Qual tipo de animal está buscando?',
+          text: 'Qual tipo de pet está buscando?',
           style: TextStyle(
               color: Cores.titulo,
               fontSize: 17,
@@ -127,16 +137,13 @@ class ListagemAnimaisPageState extends State<ListagemAnimaisPage> {
               fontStyle: FontStyle.normal),
         ),
       ),
-      margin: const EdgeInsets.only(top: 40),
     );
   }
 
   Widget buildSegment(String text) {
-    return Container(
-      child: Text(
-        text,
-        style: TextStyle(fontSize: 22, color: Colors.white),
-      ),
+    return Text(
+      text,
+      style: const TextStyle(fontSize: 16, color: Colors.white),
     );
   }
 
@@ -154,7 +161,6 @@ class ListagemAnimaisPageState extends State<ListagemAnimaisPage> {
           1: buildSegment(_tiposAnimal[1]),
           2: buildSegment(_tiposAnimal[2]),
           3: buildSegment(_tiposAnimal[3]),
-          7: buildSegment(_tiposAnimal[4]),
         },
         onValueChanged: (value) {
           setState(() {
@@ -171,14 +177,16 @@ class ListagemAnimaisPageState extends State<ListagemAnimaisPage> {
 
   Widget _buildAnimalsGrid() {
     return Container(
-        child: _animaisFiltro.length > 0
+        child: _animaisFiltro.isNotEmpty
             ? Column(
-                children: _animaisFiltro.map((e) =>
-                    buildAnimal(e),
-                ).toList(),
+                children: _animaisFiltro
+                    .map(
+                      (e) => buildAnimal(e),
+                    )
+                    .toList(),
               )
             : Container(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: const Text(
                     'Não existem pets desse tipo para adoção no momento'),
               ));
@@ -188,25 +196,30 @@ class ListagemAnimaisPageState extends State<ListagemAnimaisPage> {
     return SizedBox(
       width: MediaQuery.of(context).size.width / 8,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           FloatingActionButton(
-              backgroundColor: Colors.transparent,
-              onPressed: () {
-                Navigator.pushNamed(context, Rotas.listAnimals);
-                showModalBottomSheet(
-                  isScrollControlled: true,
-                  context: context,
-                  builder: (BuildContext context) {
-                    return PerfilAnimalPage(animal);
-                  },
-                );
-              },
-              child: CircleAvatar(
-                backgroundImage: NetworkImage('https://cdn.pixabay.com/photo/2018/08/12/16/59/parrot-3601194_960_720.jpg'),
-              ),
+            backgroundColor: Colors.transparent,
+            onPressed: () {
+              Navigator.pushNamed(context, Rotas.listAnimals);
+              showModalBottomSheet(
+                isScrollControlled: true,
+                context: context,
+                builder: (BuildContext context) {
+                  return PerfilAnimalPage(animal, false);
+                },
+              );
+            },
+            child: CircleAvatar(
+              backgroundColor: Colors.white,
+              backgroundImage: (animal.fotos.isEmpty
+                  ? Image.network(
+                          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxYfkM0bPSesaofJe0efo9xNzn_-sa2L8RPg&usqp=CAU')
+                      .image
+                  : ImagemService().toImage(animal.fotos.first).image),
+            ),
           ),
         ],
-        crossAxisAlignment: CrossAxisAlignment.end,
       ),
     );
   }
@@ -217,13 +230,14 @@ class ListagemAnimaisPageState extends State<ListagemAnimaisPage> {
       leading: _buildProfileImageAnimal(animal),
       title: Text(
         animal.nome,
-        style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
+        style: const TextStyle(
+            fontSize: 16, color: Colors.black, fontWeight: FontWeight.w500),
       ),
       subtitle: Text(
-        'Pet da raça ' + animal.raca + ' com idade $idade',
-        style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold),
+        'Raça ${animal.raca}, possui $idade anos de idade',
+        style: const TextStyle(
+            fontSize: 14, color: Colors.black, fontWeight: FontWeight.w400),
       ),
     );
   }
-
 }
