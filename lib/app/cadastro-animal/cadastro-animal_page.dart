@@ -32,7 +32,7 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Padding(
-        padding: const EdgeInsets.only(top: 40, left: 16, right: 16),
+        padding: const EdgeInsets.only(top: 48, left: 16, right: 16),
         child: CustomScrollView(
           slivers: [
             SliverFillRemaining(
@@ -54,16 +54,12 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
   Widget _buildTitulo() {
     return RichText(
       text: const TextSpan(
-        text: 'Cadastro do ',
+        text: 'Cadastro do animal',
         style: TextStyle(
             color: Cores.titulo,
             fontSize: 32,
             fontFamily: 'Jost',
             fontStyle: FontStyle.normal),
-        children: <TextSpan>[
-          TextSpan(
-              text: 'animal', style: TextStyle(fontWeight: FontWeight.w700)),
-        ],
       ),
     );
   }
@@ -111,6 +107,8 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
 
   Widget _buildFieldTipo() {
     return DropdownButtonFormField(
+      decoration: InputDecoration(
+          labelText: 'Tipo', labelStyle: Style().inputTextStyle),
       value: _animal.tipo,
       hint: Text(
         'Tipo',
@@ -462,14 +460,11 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
             ),
             onPressed: () {
               if (_formKey.currentState!.validate()) {
-                _animal.donoId = 1;
-                DataBaseService().insertAnimal(_animal);
-                Navigator.pushNamed(context, Rotas.listAnimals);
-                showModalBottomSheet(
-                  isScrollControlled: true,
-                  context: context,
-                  builder: (BuildContext context) {
-                    return PerfilAnimalPage(_animal);
+                DataBaseService().getUsuarioLogado().then(
+                  (user) {
+                    _animal.donoId = user.id;
+                    DataBaseService().insertAnimal(_animal);
+                    Navigator.popAndPushNamed(context, Rotas.meusAnimais);
                   },
                 );
               }

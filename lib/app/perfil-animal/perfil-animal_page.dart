@@ -9,8 +9,9 @@ import '../../shared/style.dart';
 class PerfilAnimalPage extends StatefulWidget {
   final String title;
   final Animal animal;
+  final bool exibicaoDoDono;
 
-  const PerfilAnimalPage(this.animal,
+  const PerfilAnimalPage(this.animal, this.exibicaoDoDono,
       {Key? key, this.title = 'PerfilAnimalPage'})
       : super(key: key);
   @override
@@ -42,7 +43,7 @@ class PerfilAnimalPageState extends State<PerfilAnimalPage> {
                       ],
                     ),
                   ),
-                  _buildButton(),
+                  if (!widget.exibicaoDoDono) _buildButton(),
                 ],
               ),
             ),

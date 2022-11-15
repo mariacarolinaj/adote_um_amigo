@@ -21,6 +21,20 @@ class loginUsuarioPageState extends State<loginUsuarioPage> {
   late String _email, _senha;
 
   @override
+  initState() {
+    super.initState();
+    SharedPreferences.getInstance().then(
+      (result) {
+        SharedPreferences prefs = result;
+        bool sessaoAtiva = prefs.getBool('sessaoAtiva') ?? false;
+        if (sessaoAtiva) {
+          Navigator.pushNamed(context, Rotas.listAnimals2);
+        }
+      },
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(

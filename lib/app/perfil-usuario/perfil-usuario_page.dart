@@ -90,19 +90,20 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
           const SizedBox(height: 8),
           Text(
             user.nome,
-            style: TextStyle(
-                fontSize: 28, color: Colors.black, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+                fontSize: 28, color: Colors.black, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 8),
           Container(
-            margin: EdgeInsets.only(left: 32, right: 32),
+            margin: const EdgeInsets.only(left: 32, right: 32),
             child: Text(
               user.apresentacao,
+              textAlign: TextAlign.center,
               textDirection: TextDirection.ltr,
               style: const TextStyle(
                   fontSize: 14,
                   color: Colors.black,
-                  fontWeight: FontWeight.bold),
+                  fontWeight: FontWeight.w500),
             ),
           ),
           const SizedBox(height: 16),
@@ -110,7 +111,7 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               buildSocialIcon(FontAwesomeIcons.dog, Rotas.meusAnimais),
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
               buildSocialIcon(FontAwesomeIcons.searchLocation,
                   Rotas.meusAnimais), //adicionar rota de localizacao
               // SizedBox(width: 12),
@@ -122,7 +123,7 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
           // const SizedBox(height: 16),
           // NumbersWidget(),
           const SizedBox(height: 10),
-          Divider(),
+          const Divider(),
           const SizedBox(height: 16),
           buildMyAnimal(),
           const SizedBox(height: 16),
@@ -135,7 +136,7 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
   Widget buildSocialIcon(IconData icon, String rotas) => CircleAvatar(
         radius: 25,
         child: Material(
-          shape: CircleBorder(),
+          shape: const CircleBorder(),
           clipBehavior: Clip.hardEdge,
           color: Colors.transparent,
           child: InkWell(
@@ -152,7 +153,7 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
               backgroundColor: Colors.orangeAccent,
               elevation: 30,
               shadowColor: Colors.green),
-          child: Text(
+          child: const Text(
             'Meus animais de interesse',
             style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
           ),
@@ -166,7 +167,7 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
               backgroundColor: Colors.orangeAccent,
               elevation: 30,
               shadowColor: Colors.green),
-          child: Text(
+          child: const Text(
             'Logout',
             style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
           ),

@@ -91,7 +91,6 @@ class ListagemAnimaisPageState extends State<ListagemAnimaisPage> {
               },
               child: CircleAvatar(
                 radius: 32,
-                backgroundColor: Colors.grey.shade800,
                 backgroundImage:
                     ImagemService().toImage(_user.imagemPerfil).image,
               )),
@@ -103,7 +102,7 @@ class ListagemAnimaisPageState extends State<ListagemAnimaisPage> {
   Widget _buildTitleHeader() {
     return Container(
       padding: const EdgeInsets.only(top: 8),
-      width: MediaQuery.of(context).size.width * 0.6,
+      width: MediaQuery.of(context).size.width * 0.65,
       child: RichText(
         text: TextSpan(
           text: 'Olá, ',
@@ -204,7 +203,7 @@ class ListagemAnimaisPageState extends State<ListagemAnimaisPage> {
                 isScrollControlled: true,
                 context: context,
                 builder: (BuildContext context) {
-                  return PerfilAnimalPage(animal);
+                  return PerfilAnimalPage(animal, false);
                 },
               );
             },

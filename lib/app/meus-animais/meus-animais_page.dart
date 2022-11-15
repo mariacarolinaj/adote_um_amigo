@@ -1,87 +1,125 @@
+import 'package:adote_um_amigo/shared/imagem_service.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/animal.dart';
 import '../../models/tipo-animal-enum.dart';
+import '../../models/usuario.dart';
 import '../../shared/db_service.dart';
 import '../../shared/rotas.dart';
+import '../../shared/style.dart';
+import '../perfil-animal/perfil-animal_page.dart';
 
-class MeusAnimaisPage extends StatelessWidget {
+class MeusAnimaisPage extends StatefulWidget {
   final String title;
 
   const MeusAnimaisPage({Key? key, this.title = 'MeusAnimaisPage'})
       : super(key: key);
 
   @override
-  MeusAnimaisPageStateless createState() => MeusAnimaisPageStateless();
+  State<MeusAnimaisPage> createState() => _MeusAnimaisPageState();
+}
+
+class _MeusAnimaisPageState extends State<MeusAnimaisPage> {
+  var _user = Usuario.empty();
+  List<Animal> _animais = [];
+
+  @override
+  initState() {
+    super.initState();
+    DataBaseService().getUsuarioLogado().then((result) {
+      _user = result;
+      DataBaseService().getAnimalByUserId(_user.id).then((value) {
+        _animais = value;
+        setState(() {});
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Meus animais',
-          style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
+      resizeToAvoidBottomInset: false,
+      body: Padding(
+        padding:
+            const EdgeInsets.only(top: 48, left: 16, right: 16, bottom: 24),
+        child: Column(
+          children: <Widget>[
+            _buildTitleHeader(),
+            _buildList(),
+          ],
         ),
-        backgroundColor: Colors.orangeAccent,
       ),
-      body: MeusAnimaisPageStateless(),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.pushNamed(context, Rotas.cadastroAnimal);
+        },
+        label: const Text('Cadastrar animal'),
+        icon: const Icon(Icons.add),
+        backgroundColor: Cores.secondary,
+      ),
     );
-
   }
-}
 
-class MeusAnimaisPageStateless extends StatelessWidget{
-  final double coverHeight = 280;
-  final double profileHeight = 144;
-  List<Animal> myanimals = [];
+  Widget _buildTitleHeader() {
+    return Center(
+      child: RichText(
+        text: const TextSpan(
+          text: 'Meus animais',
+          style: TextStyle(
+              color: Cores.titulo,
+              fontSize: 32,
+              fontFamily: 'Jost',
+              fontStyle: FontStyle.normal),
+        ),
+      ),
+    );
+  }
 
-  //dados para teste
-  Animal an = Animal(02, "baluu", "pit", "manso", "em dia", 1, [], 01, TipoAnimal.Cachorro);
-  Animal an2 = Animal(02, "bob", "pit", "manso", "em dia", 1, [], 01, TipoAnimal.Cachorro);
-
-
-  @override
-  Widget build(BuildContext context) {
-
-    myanimals.add(an);
-    myanimals.add(an2);
-    // DataBaseService()..getAnimalByUserId(1).then((value) => myanimals = value);
-    DataBaseService().getAllAnimal().then((value) => myanimals = value);
-
-
+  Widget _buildList() {
     return Container(
-          child: myanimals.length > 0
-              ? Column(
-            children: myanimals.map((e) =>
-                _buildAnimalsGrid(e),
-            ).toList(),
-          )
-              : Container(
-            padding: EdgeInsets.all(16),
-            child: const Text(
-                'Não existem pets em sua lista'),
-          ));
-    }
+      child: _animais.isNotEmpty
+          ? Column(
+              children: _animais.map((e) => _buildAnimalsGrid(e)).toList(),
+            )
+          : Container(
+              padding: const EdgeInsets.all(16),
+              child: const Text('Não existem pets em sua lista'),
+            ),
+    );
+  }
 
   Widget _buildAnimalsGrid(Animal animal) {
-    // var localizacao pegar o usuario a partir do animal
     return Column(
       children: [
         ListTile(
           leading: CircleAvatar(
-            backgroundImage: NetworkImage('https://cdn.pixabay.com/photo/2018/08/12/16/59/parrot-3601194_960_720.jpg'),
+            backgroundImage: animal.fotos.isEmpty
+                ? Image.network(
+                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxYfkM0bPSesaofJe0efo9xNzn_-sa2L8RPg&usqp=CAU')
+                    .image
+                : ImagemService().toImage(animal.fotos.first).image,
           ),
           title: Text(
-              animal.nome,
-            style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
+            animal.nome,
+            style: const TextStyle(
+                fontSize: 16, color: Colors.black, fontWeight: FontWeight.w500),
           ),
           subtitle: Text(
-              'Localizado em BH',
-            style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold),
+            'Raça ${animal.raca}, possui ${animal.idade} anos de idade',
+            style: const TextStyle(
+                fontSize: 14, color: Colors.black, fontWeight: FontWeight.w400),
           ),
+          onTap: () {
+            showModalBottomSheet(
+              isScrollControlled: true,
+              context: context,
+              builder: (BuildContext context) {
+                return PerfilAnimalPage(animal, true);
+              },
+            );
+          },
         ),
         const SizedBox(height: 4),
-        Divider(),
       ],
     );
   }
