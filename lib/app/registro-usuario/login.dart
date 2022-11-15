@@ -44,7 +44,7 @@ class loginUsuarioPageState extends State<loginUsuarioPage> {
               ),
               Form(
                 key: _formKey,
-                autovalidateMode: AutovalidateMode.always,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 child: Column(
                   children: [
                     _buildFieldEmail(),
@@ -63,7 +63,11 @@ class loginUsuarioPageState extends State<loginUsuarioPage> {
                       },
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.fromLTRB(40, 15, 40, 15),
-                      ),
+                        backgroundColor: Cores.primaria,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0)),
                       child: const Text(
                         'Entrar',
                         style: TextStyle(
@@ -77,14 +81,15 @@ class loginUsuarioPageState extends State<loginUsuarioPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        const Text('Ainda não possui uma conta?'),
                         TextButton(
                           onPressed: () {
                             Navigator.pushNamed(context, Rotas.registroUsuario);
                           },
-                          child: const Text('Criar uma conta'),
+                          child: const Text('Cadastre-se agora'),
                         ),
                       ],
-                    ),
+                    )
                   ],
                 ),
               )
@@ -102,17 +107,16 @@ class loginUsuarioPageState extends State<loginUsuarioPage> {
           return 'Insira sua senha';
         }
         senha = value;
-
         return null;
       },
+      keyboardType: TextInputType.visiblePassword,
       maxLines: 1,
       obscureText: true,
-      decoration: InputDecoration(
-        prefixIcon: const Icon(Icons.lock),
-        hintText: 'Insira sua senha',
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
+      style: Style().inputTextStyle,
+      decoration: const InputDecoration(
+        prefixIcon: Icon(Icons.lock),
+        border: UnderlineInputBorder(),
+        hintText: 'Senha',
       ),
     );
   }
@@ -120,22 +124,31 @@ class loginUsuarioPageState extends State<loginUsuarioPage> {
   TextFormField _buildFieldEmail() {
     return TextFormField(
       maxLines: 1,
-      decoration: InputDecoration(
-        hintText: 'Insira seu Email',
-        prefixIcon: const Icon(Icons.email),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
+      style: Style().inputTextStyle,
+      decoration: const InputDecoration(
+        hintText: 'E-mail',
+        prefixIcon: Icon(Icons.email),
+        border: UnderlineInputBorder(),
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Insira seu e-mail';
         }
+        if (!_emailValidator(value)) {
+          return 'E-mail inválido';
+        }
         email = value;
-
         return null;
       },
     );
+  }
+
+  bool _emailValidator(String email) {
+    String pattern =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regExp = RegExp(pattern);
+
+    return regExp.hasMatch(email);
   }
 
   _validarLogin() async {
