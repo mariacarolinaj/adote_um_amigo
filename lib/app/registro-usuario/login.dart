@@ -181,8 +181,7 @@ class loginUsuarioPageState extends State<loginUsuarioPage> {
       );
     } else {
       await _salvarDadosDeSessao(user);
-      Navigator.pushNamed(
-          context, Rotas.cadastroAnimal); // trocar pra rota da pag principal
+      Navigator.pushNamed(context, Rotas.listAnimals2);
     }
   }
 
