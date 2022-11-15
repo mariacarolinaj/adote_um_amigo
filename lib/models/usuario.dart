@@ -5,11 +5,11 @@ class Usuario {
   late String nome;
   late String email;
   late String password;
-  late String imagemPerfil;
-  late String imagemCapa;
+  late String imagemPerfil = '';
+  late String imagemCapa = '';
   late String apresentacao;
-  late double latGeo;
-  late double lonGeo;
+  late double latGeo = 0;
+  late double lonGeo = 0;
   late String telefone;
 
   Usuario.empty();

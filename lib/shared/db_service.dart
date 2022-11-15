@@ -66,7 +66,7 @@ class DataBaseService {
 
     int id = await bd.insert("usuario", dados);
 
-    log("Usuário inserido. (ID: $id)");
+    print("Usuário inserido. (ID: $id)");
 
     return id;
   }
