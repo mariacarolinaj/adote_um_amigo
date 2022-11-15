@@ -17,10 +17,8 @@ class loginUsuarioPage extends StatefulWidget {
 }
 
 class loginUsuarioPageState extends State<loginUsuarioPage> {
-  @override
   final _formKey = GlobalKey<FormState>();
-  var rememberValue = false;
-  var email, senha;
+  late String _email, _senha;
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +104,7 @@ class loginUsuarioPageState extends State<loginUsuarioPage> {
         if (value == null || value.isEmpty) {
           return 'Insira sua senha';
         }
-        senha = value;
+        _senha = value;
         return null;
       },
       keyboardType: TextInputType.visiblePassword,
@@ -137,7 +135,7 @@ class loginUsuarioPageState extends State<loginUsuarioPage> {
         if (!_emailValidator(value)) {
           return 'E-mail inválido';
         }
-        email = value;
+        _email = value;
         return null;
       },
     );
@@ -152,7 +150,7 @@ class loginUsuarioPageState extends State<loginUsuarioPage> {
   }
 
   _validarLogin() async {
-    var user = await DataBaseService().getUserByEmailESenha(email, senha);
+    var user = await DataBaseService().getUserByEmailESenha(_email, _senha);
     if (user.nome == null || user.nome == '') {
       showDialog(
         context: context,

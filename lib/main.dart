@@ -19,45 +19,67 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        brightness: Brightness.light, // light mode
-        primaryColor: Cores.primaria,
-        fontFamily: 'Jost',
-        textTheme: const TextTheme(
-          titleLarge: TextStyle(
-              color: Cores.titulo, fontSize: 32, fontStyle: FontStyle.normal),
-          titleMedium: TextStyle(
-              color: Cores.titulo, fontSize: 24, fontStyle: FontStyle.normal),
-          titleSmall: TextStyle(
-              color: Cores.titulo, fontSize: 16, fontStyle: FontStyle.normal),
-          bodyMedium: TextStyle(
-              color: Cores.texto, fontSize: 12, fontStyle: FontStyle.normal),
-          bodySmall: TextStyle(
-              color: Cores.texto, fontSize: 12, fontStyle: FontStyle.normal),
-        ),
-      ),
-      home: StepForm(),
-      // definir as rotas para cada página aqui
-      routes: <String, WidgetBuilder>{
-        Rotas.cadastroAnimal: (BuildContext context) =>
-            const CadastroAnimalPage(title: 'Cadastro de Animal'),
-        Rotas.loginUsuario: (BuildContext context) =>
-            const loginUsuarioPage(title: 'Login de Usuario'),
-        Rotas.registroUsuario: (BuildContext context) =>
-            const RegisterPage(title: 'Cadastro de Usuario'),
-        Rotas.perfilUsuario: (BuildContext context) =>
-            const PerfilUsuarioPage(title: 'Perfil de usuario'),
-        Rotas.meusAnimais: (BuildContext context) =>
-            const MeusAnimaisPage(title: 'MeusAnimais'),
-        Rotas.listAnimals: (BuildContext context) =>
-            const ListagemAnimaisPage(title: 'ListaDeAnimais'),
-        Rotas.listAnimals2: (BuildContext context) =>
-        const ListagemAnimaisPage2(title: 'ListaDeAnimais'),
+    bool pularIntro = false;
+    return FutureBuilder<bool>(
+      future: _pularIntro(),
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        pularIntro = snapshot.data ?? false;
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Flutter Demo',
+          theme: ThemeData(
+            brightness: Brightness.light, // light mode
+            primaryColor: Cores.primaria,
+            fontFamily: 'Jost',
+            textTheme: const TextTheme(
+              titleLarge: TextStyle(
+                  color: Cores.titulo,
+                  fontSize: 32,
+                  fontStyle: FontStyle.normal),
+              titleMedium: TextStyle(
+                  color: Cores.titulo,
+                  fontSize: 24,
+                  fontStyle: FontStyle.normal),
+              titleSmall: TextStyle(
+                  color: Cores.titulo,
+                  fontSize: 16,
+                  fontStyle: FontStyle.normal),
+              bodyMedium: TextStyle(
+                  color: Cores.texto,
+                  fontSize: 12,
+                  fontStyle: FontStyle.normal),
+              bodySmall: TextStyle(
+                  color: Cores.texto,
+                  fontSize: 12,
+                  fontStyle: FontStyle.normal),
+            ),
+          ),
+          home: pularIntro ? const loginUsuarioPage() : StepForm(),
+          routes: <String, WidgetBuilder>{
+            Rotas.cadastroAnimal: (BuildContext context) =>
+                const CadastroAnimalPage(title: 'Cadastro de Animal'),
+            Rotas.loginUsuario: (BuildContext context) =>
+                const loginUsuarioPage(title: 'Login de Usuario'),
+            Rotas.registroUsuario: (BuildContext context) =>
+                const RegisterPage(title: 'Cadastro de Usuario'),
+            Rotas.perfilUsuario: (BuildContext context) =>
+                const PerfilUsuarioPage(title: 'Perfil de usuario'),
+            Rotas.meusAnimais: (BuildContext context) =>
+                const MeusAnimaisPage(title: 'MeusAnimais'),
+            Rotas.listAnimals: (BuildContext context) =>
+                const ListagemAnimaisPage(title: 'ListaDeAnimais'),
+            Rotas.listAnimals2: (BuildContext context) =>
+                const ListagemAnimaisPage2(title: 'ListaDeAnimais'),
+          },
+        );
       },
     );
+  }
+
+  Future<bool> _pularIntro() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool? pularIntro = prefs.getBool('pularIntro');
+    return pularIntro ?? false;
   }
 }
 
@@ -87,6 +109,6 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<bool> _isSessaoAtiva() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool? sessaoAtiva = prefs.getBool('sessaoAtiva');
-    return prefs.getBool('sessaoAtiva') ?? false;
+    return sessaoAtiva ?? false;
   }
 }
