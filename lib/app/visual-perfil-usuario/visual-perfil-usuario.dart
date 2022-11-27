@@ -1,0 +1,140 @@
+import 'package:flutter/material.dart';
+import 'package:adote_um_amigo/models/usuario.dart';
+import 'package:adote_um_amigo/shared/imagem_service.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../../shared/rotas.dart';
+
+class VisualPerfilUsuario extends StatefulWidget
+{
+  @override
+  State<StatefulWidget> createState() {
+  return _VisualPerfilState();
+  }
+}
+
+class _VisualPerfilState extends State<VisualPerfilUsuario>
+{
+
+  final double coverHeight = 280;
+  final double profileHeight = 144;
+  Usuario user = Usuario.empty();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: ListView(
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          buildTop(),
+          buildContent(),
+        ],
+      ),
+    );
+  }
+
+  //funcao para alihar as fotos de capa e perfil
+  Widget buildTop() {
+    final bottom = profileHeight / 2;
+    final top = coverHeight - profileHeight / 2;
+
+    return Stack(
+      clipBehavior: Clip.none,
+      alignment: Alignment.center,
+      children: [
+        Container(
+          margin: EdgeInsets.only(bottom: bottom),
+          child: buildCoverImage(),
+        ),
+        Positioned(
+          top: top,
+          child: buildProfileImage(),
+        )
+      ],
+    );
+  }
+
+  //imagem do fundo/ capa
+  Widget buildCoverImage() => Container(
+    color: Colors.grey,
+    child: Image.network(
+      'https://i.pinimg.com/originals/c2/da/7a/c2da7af65cbcfaff6f7582d6a0b79781.jpg',
+      width: double.infinity,
+      height: coverHeight,
+      fit: BoxFit.cover,
+    ),
+  ); //Container
+
+  //imagem de perfil/ avatar
+  Widget buildProfileImage() => CircleAvatar(
+    radius: profileHeight / 2,
+    backgroundColor: Colors.grey.shade800,
+    backgroundImage: user.imagemPerfil.isEmpty
+        ? Image.network(
+        'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png')
+        .image
+        : ImagemService().toImage(user.imagemPerfil).image,
+  );
+
+  Widget buildContent() => Column(
+    children: [
+      const SizedBox(height: 8),
+      Text(
+        user.nome,
+        style: const TextStyle(
+            fontSize: 28, color: Colors.black, fontWeight: FontWeight.w600),
+      ),
+      const SizedBox(height: 8),
+      Container(
+        margin: const EdgeInsets.only(left: 32, right: 32),
+        child: Text(
+          user.apresentacao,
+          textAlign: TextAlign.center,
+          textDirection: TextDirection.ltr,
+          style: const TextStyle(
+              fontSize: 14,
+              color: Colors.black,
+              fontWeight: FontWeight.w500),
+        ),
+      ),
+      const SizedBox(height: 16),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          buildSocialIcon(FontAwesomeIcons.dog, Rotas.meusAnimais),
+          const SizedBox(width: 12),
+          buildSocialIcon(FontAwesomeIcons.searchLocation,
+              Rotas.meusAnimais), //adicionar rota de localizacao
+          // SizedBox(width: 12),
+          // buildSocialIcon(FontAwesomeIcons.star,
+          //     Rotas.meusAnimais), //adicionar rota de quantas estrelas
+        ],
+      ),
+      const SizedBox(height: 5),
+      // const SizedBox(height: 16),
+      // NumbersWidget(),
+      const SizedBox(height: 10),
+      const Divider(),
+      const SizedBox(height: 16),
+      const SizedBox(height: 16),
+      const SizedBox(height: 16),
+    ],
+  );
+
+  //icones de informacao do usuario
+  Widget buildSocialIcon(IconData icon, String rotas) => CircleAvatar(
+    radius: 25,
+    child: Material(
+      shape: const CircleBorder(),
+      clipBehavior: Clip.hardEdge,
+      color: Colors.transparent,
+      child: InkWell(
+        child: Center(child: Icon(icon, size: 32)),
+      ),
+    ),
+  );
+}
+
+
+
+
+

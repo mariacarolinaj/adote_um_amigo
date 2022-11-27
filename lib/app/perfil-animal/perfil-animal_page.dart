@@ -1,10 +1,12 @@
 import 'dart:convert';
 
 import 'package:adote_um_amigo/models/animal.dart';
+import 'package:adote_um_amigo/shared/rotas.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
 import '../../shared/style.dart';
+import '../visual-perfil-usuario/visual-perfil-usuario.dart';
 
 class PerfilAnimalPage extends StatefulWidget {
   final String title;
@@ -268,8 +270,14 @@ class PerfilAnimalPageState extends State<PerfilAnimalPage> {
               'Tenho interesse',
               style: TextStyle(fontSize: 16),
             ),
+            // Botão que abre uma segunda tela mostrando o perfil do usuário
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => VisualPerfilUsuario()
+                )
+              );
               // Navigator.pushNamed(context, Rotas.chat);
               // redirecionar para a rota do chat com o tutor do animal
             },
