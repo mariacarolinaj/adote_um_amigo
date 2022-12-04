@@ -172,7 +172,7 @@ class _RegisterPageState extends State<RegisterPage> {
       style: Style().inputTextStyle,
       controller: dataCEP,
       onChanged: (String value) async {
-        if (value == 8) {
+        if (value.length == 8) {
           _searchCep();
         }
       },
