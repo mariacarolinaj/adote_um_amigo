@@ -171,7 +171,11 @@ class _RegisterPageState extends State<RegisterPage> {
       keyboardType: TextInputType.number,
       style: Style().inputTextStyle,
       controller: dataCEP,
-      onChanged: (value) => _searchCep(),
+      onChanged: (String value) async {
+        if (value == 8) {
+          _searchCep();
+        }
+      },
       decoration: const InputDecoration(
         hintText: 'CEP',
         prefixIcon: Icon(Icons.pin),
