@@ -1,9 +1,11 @@
 import 'package:adote_um_amigo/models/usuario.dart';
+import 'package:adote_um_amigo/models/result_cep.dart';
 import 'package:flutter/material.dart';
 import 'package:adote_um_amigo/shared/rotas.dart';
 import 'package:adote_um_amigo/shared/style.dart';
 import 'package:adote_um_amigo/shared/db_service.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:adote_um_amigo/service/via_cep_service.dart';
 
 import '../../shared/imagem_service.dart';
 
@@ -18,6 +20,8 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
   final Usuario _user = Usuario.empty();
+  TextEditingController dataCEP = TextEditingController();
+  String _result = '';
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +65,10 @@ class _RegisterPageState extends State<RegisterPage> {
                         _spacer(),
                         _buildFieldEmail(),
                         _spacer(),
+                        _buildFieldCep(),
+                        _spacer(),
+                        _buildResultForm(),
+                        _spacer(),
                         _buildFieldSenha(),
                         _spacer(),
                         _buildFieldApresentacao(),
@@ -70,6 +78,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         _buildButtonCadastrar(),
                         _spacer(),
                         _buildInfoEntrar(),
+                        _spacer(),
                       ],
                     ),
                   )
@@ -153,6 +162,38 @@ class _RegisterPageState extends State<RegisterPage> {
         hintText: 'Insira uma senha',
         border: UnderlineInputBorder(),
       ),
+    );
+  }
+
+  TextFormField _buildFieldCep() {
+    return TextFormField(
+      maxLines: 1,
+      keyboardType: TextInputType.number,
+      style: Style().inputTextStyle,
+      controller: dataCEP,
+      onChanged: (value) => _searchCep(),
+      decoration: const InputDecoration(
+        hintText: 'CEP',
+        prefixIcon: Icon(Icons.pin),
+        border: UnderlineInputBorder(),
+      ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'CEP = 00000000';
+        }
+        if (value.length < 8) {
+          return 'O CEP deve conter 8 digitos';
+        }
+        _user.latGeo = double.parse(value);
+        return null;
+      },
+    );
+  }
+
+  Widget _buildResultForm() {
+    return Container(
+      padding: EdgeInsets.only(top: 20.0),
+      child: Text(_result ?? ''),
     );
   }
 
@@ -340,7 +381,6 @@ class _RegisterPageState extends State<RegisterPage> {
         _getFotoCamera();
         break;
       case null:
-        // dialog dismissed
         break;
     }
   }
@@ -375,5 +415,14 @@ class _RegisterPageState extends State<RegisterPage> {
         },
       );
     }
+  }
+
+  void _searchCep() async {
+    final cep = dataCEP.text;
+    final resultCep = await ViaCepService.fetchCep(cep);
+    print(resultCep.localidade); // Exibindo somente a localidade no terminal
+    setState(() {
+      _result = resultCep.localidade;
+    });
   }
 }

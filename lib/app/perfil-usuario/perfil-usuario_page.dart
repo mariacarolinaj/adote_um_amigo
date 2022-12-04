@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../shared/rotas.dart';
+import 'package:adote_um_amigo/models/result_cep.dart';
+import 'package:adote_um_amigo/service/via_cep_service.dart';
 
 class PerfilUsuarioPage extends StatefulWidget {
   final String title;
@@ -22,6 +24,7 @@ class PerfilUsuarioPage extends StatefulWidget {
 class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
   final double coverHeight = 280;
   final double profileHeight = 144;
+  String _resultCep = '';
   Usuario user = Usuario.empty();
 
   @override
@@ -30,6 +33,21 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
     DataBaseService().getUsuarioLogado().then((result) {
       user = result;
       setState(() {});
+    });
+    print('LatGeo');
+    print(user.latGeo);
+    int toInt = user.latGeo.toInt();
+    String toString = toInt.toString();
+    print('Value to String');
+    print(toString);
+    _searchCep(toString);
+  }
+
+  void _searchCep(String cep) async {
+    final resultCep = await ViaCepService.fetchCep(cep);
+    print(resultCep.localidade); // Exibindo somente a localidade no terminal
+    setState(() {
+      _resultCep = resultCep.localidade;
     });
   }
 
@@ -94,6 +112,11 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
           const SizedBox(height: 8),
           Text(
             user.nome,
+            style: const TextStyle(
+                fontSize: 28, color: Colors.black, fontWeight: FontWeight.w600),
+          ),
+          Text(
+            _resultCep,
             style: const TextStyle(
                 fontSize: 28, color: Colors.black, fontWeight: FontWeight.w600),
           ),
