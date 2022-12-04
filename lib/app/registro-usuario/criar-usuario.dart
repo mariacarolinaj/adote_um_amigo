@@ -173,6 +173,8 @@ class _RegisterPageState extends State<RegisterPage> {
       controller: dataCEP,
       onChanged: (String value) async {
         if (value.length == 8) {
+          print('Mudou');
+          print(value);
           _searchCep();
         }
       },

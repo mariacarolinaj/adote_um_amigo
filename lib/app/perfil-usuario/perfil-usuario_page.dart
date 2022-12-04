@@ -34,13 +34,6 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
       user = result;
       setState(() {});
     });
-    print('LatGeo');
-    print(user.latGeo);
-    int toInt = user.latGeo.toInt();
-    String toString = toInt.toString();
-    print('Value to String');
-    print(toString);
-    _searchCep(toString);
   }
 
   void _searchCep(String cep) async {
@@ -49,6 +42,17 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
     setState(() {
       _resultCep = resultCep.localidade;
     });
+  }
+
+  void _methodToPrint() {
+    print(user.nome);
+    print('LatGeo');
+    print(user.latGeo);
+    int toInt = user.latGeo.toInt();
+    String toString = toInt.toString();
+    print('Value to String');
+    print(toString);
+    _searchCep(toString);
   }
 
   @override
@@ -68,6 +72,7 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
   Widget buildTop() {
     final bottom = profileHeight / 2;
     final top = coverHeight - profileHeight / 2;
+    _methodToPrint();
 
     return Stack(
       clipBehavior: Clip.none,
