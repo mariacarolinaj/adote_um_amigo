@@ -466,7 +466,8 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
                     DataBaseService().insertAnimal(_animal).then((id) =>
                         _animal.fotos.forEach((foto) =>
                             DataBaseService().insertFotoAnimal(foto, id)));
-                    Navigator.popAndPushNamed(context, Rotas.meusAnimais);
+                    Navigator.popUntil(
+                        context, ModalRoute.withName(Rotas.listAnimals2));
                   },
                 );
               }

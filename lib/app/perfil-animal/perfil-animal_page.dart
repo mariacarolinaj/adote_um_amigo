@@ -58,6 +58,7 @@ class PerfilAnimalPageState extends State<PerfilAnimalPage> {
                     ),
                   ),
                   if (!widget.exibicaoDoDono) _buildButton(),
+                  _buildButtonVoltar(),
                 ],
               ),
             ),
@@ -267,7 +268,7 @@ class PerfilAnimalPageState extends State<PerfilAnimalPage> {
   Widget _buildButton() {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 32.0),
+        padding: const EdgeInsets.only(top: 32.0, bottom: 16),
         child: SizedBox(
           width: 300,
           height: 50,
@@ -295,6 +296,35 @@ class PerfilAnimalPageState extends State<PerfilAnimalPage> {
                       ),
                     ),
                   );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildButtonVoltar() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 8.0),
+        child: SizedBox(
+          width: 300,
+          height: 30,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0)),
+            child: const Text(
+              'Voltar',
+              style: TextStyle(fontSize: 16, color: Colors.black),
+            ),
+            // Botão que abre uma segunda tela mostrando o perfil do usuário
+            onPressed: () {
+              Navigator.popUntil(
+                  context, ModalRoute.withName(Rotas.listAnimals2));
             },
           ),
         ),
