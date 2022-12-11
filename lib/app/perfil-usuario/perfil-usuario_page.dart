@@ -105,32 +105,16 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
               textAlign: TextAlign.center,
               textDirection: TextDirection.ltr,
               style: const TextStyle(
-                  fontSize: 14,
+                  fontSize: 16,
                   color: Colors.black,
                   fontWeight: FontWeight.w500),
             ),
           ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              buildSocialIcon(FontAwesomeIcons.dog, Rotas.meusAnimais),
-              const SizedBox(width: 12),
-              buildSocialIcon(FontAwesomeIcons.searchLocation,
-                  Rotas.meusAnimais), //adicionar rota de localizacao
-              // SizedBox(width: 12),
-              // buildSocialIcon(FontAwesomeIcons.star,
-              //     Rotas.meusAnimais), //adicionar rota de quantas estrelas
-            ],
-          ),
           const SizedBox(height: 5),
           // const SizedBox(height: 16),
           // NumbersWidget(),
-          const SizedBox(height: 10),
-          const Divider(),
           const SizedBox(height: 16),
           buildMyAnimal(),
-          const SizedBox(height: 16),
           _logout(),
           const SizedBox(height: 16),
         ],
@@ -151,29 +135,29 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
       );
 
   //botao para meus animais de interesse *Futuramente colocar em um if para visao do usuario somente
-  Widget buildMyAnimal() => Container(
+  Widget buildMyAnimal() => SizedBox(
+        width: 300,
         child: TextButton(
-          style: TextButton.styleFrom(
-              backgroundColor: Colors.orangeAccent,
-              elevation: 30,
-              shadowColor: Colors.green),
+          style: TextButton.styleFrom(backgroundColor: Colors.orangeAccent),
           child: const Text(
-            'Meus animais de interesse',
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+            'Meus interesses',
+            style: TextStyle(
+                fontWeight: FontWeight.w500, fontSize: 16, color: Colors.black),
           ),
           onPressed: () => Navigator.pushNamed(context, Rotas.animaisInteresse),
         ),
       );
 
-  Widget _logout() => Container(
+  Widget _logout() => SizedBox(
+        width: 300,
         child: TextButton(
           style: TextButton.styleFrom(
-              backgroundColor: Colors.orangeAccent,
-              elevation: 30,
-              shadowColor: Colors.green),
+            backgroundColor: Colors.orangeAccent,
+          ),
           child: const Text(
-            'Logout',
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+            'Sair',
+            style: TextStyle(
+                fontWeight: FontWeight.w500, fontSize: 16, color: Colors.black),
           ),
           onPressed: () async {
             SharedPreferences prefs = await SharedPreferences.getInstance();
