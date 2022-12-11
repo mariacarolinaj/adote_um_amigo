@@ -463,7 +463,9 @@ class CadastroAnimalPageState extends State<CadastroAnimalPage> {
                 DataBaseService().getUsuarioLogado().then(
                   (user) {
                     _animal.donoId = user.id;
-                    DataBaseService().insertAnimal(_animal);
+                    DataBaseService().insertAnimal(_animal).then((id) =>
+                        _animal.fotos.forEach((foto) =>
+                            DataBaseService().insertFotoAnimal(foto, id)));
                     Navigator.popAndPushNamed(context, Rotas.meusAnimais);
                   },
                 );

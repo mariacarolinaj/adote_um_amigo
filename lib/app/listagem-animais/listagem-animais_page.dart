@@ -40,6 +40,12 @@ class ListagemAnimaisPageState extends State<ListagemAnimaisPage> {
       setState(() {});
     });
     DataBaseService().getAllAnimal().then((value) {
+      for (var animal in value) {
+        DataBaseService().getFotosByAnimalId(animal.id).then((foto) {
+          animal.fotos = foto;
+          setState(() {});
+        });
+      }
       _animais = value;
       _animaisFiltro = _animais
           .where((animal) => animal.tipo == _tiposAnimal[_groupValue])
@@ -193,6 +199,7 @@ class ListagemAnimaisPageState extends State<ListagemAnimaisPage> {
   }
 
   Widget _buildProfileImageAnimal(Animal animal) {
+    print(animal);
     return SizedBox(
       width: MediaQuery.of(context).size.width / 8,
       child: Column(
@@ -212,11 +219,11 @@ class ListagemAnimaisPageState extends State<ListagemAnimaisPage> {
             },
             child: CircleAvatar(
               backgroundColor: Colors.white,
-              backgroundImage: (animal.fotos.isEmpty
-                  ? Image.network(
+              backgroundImage: (animal.fotos.isNotEmpty
+                  ? ImagemService().toImage(animal.fotos.first).image
+                  : Image.network(
                           'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxYfkM0bPSesaofJe0efo9xNzn_-sa2L8RPg&usqp=CAU')
-                      .image
-                  : ImagemService().toImage(animal.fotos.first).image),
+                      .image),
             ),
           ),
         ],

@@ -87,8 +87,6 @@ class DataBaseService {
 
     int animalId = await bd.insert("animal", dados);
 
-    animal.fotos.map((foto) async => await insertFotoAnimal(foto, animalId));
-
     log("Animal inserido. (ID: $animalId)");
 
     return animalId;
@@ -178,22 +176,19 @@ class DataBaseService {
 
   Future<List<Animal>> getAllAnimal() async {
     Database bd = await _getDB();
-    String sql = "SELECT a.id, "
-        "a.nome, "
-        "a.idade, "
-        "a.raca, "
-        "a.tipo, "
-        "a.caracteristicas, "
-        "a.vacinas, "
-        "a.donoId, "
-        "f.foto "
-        "FROM animal a "
-        "LEFT JOIN fotos f "
-        "ON a.id = f.petId";
+    String sql = "SELECT id, "
+        "nome, "
+        "idade, "
+        "raca, "
+        "tipo, "
+        "caracteristicas, "
+        "vacinas, "
+        "donoId "
+        "FROM animal";
 
     var response = await bd.rawQuery(sql);
 
-    var animais = _mapFotosAnimal(response);
+    var animais = response.map((animal) => Animal.fromMap(animal)).toList();
 
     log("Resultado da busca por todos os animais:");
     inspect(animais);
@@ -318,8 +313,11 @@ class DataBaseService {
 
   Future<List<String>> getFotosByAnimalId(int id) async {
     Database bd = await _getDB();
-    var response = await bd.query("fotos",
-        columns: ["foto"], where: "petId = ?", whereArgs: [id]);
+    String sql = "SELECT foto FROM fotos WHERE petId = $id";
+    var response = await bd.rawQuery(sql);
+
+    log("Resultado da busca por todas as fotos by petId:");
+    inspect(response);
 
     return response.map((ret) => ret["foto"] as String).toList();
   }

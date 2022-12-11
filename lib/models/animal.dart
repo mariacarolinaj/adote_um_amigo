@@ -1,4 +1,5 @@
 import 'package:adote_um_amigo/models/tipo-animal-enum.dart';
+import 'package:adote_um_amigo/shared/db_service.dart';
 
 class Animal {
   late int id;
@@ -25,5 +26,6 @@ class Animal {
     idade = map["idade"];
     donoId = map["donoId"];
     tipo = map["tipo"];
+    // DataBaseService().getFotosByAnimalId(id).then((value) => fotos = value);
   }
 }
