@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:adote_um_amigo/models/animal.dart';
+import 'package:adote_um_amigo/models/usuario.dart';
+import 'package:adote_um_amigo/shared/db_service.dart';
 import 'package:adote_um_amigo/shared/rotas.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +24,16 @@ class PerfilAnimalPage extends StatefulWidget {
 
 class PerfilAnimalPageState extends State<PerfilAnimalPage> {
   final CarouselController _buttonCarouselController = CarouselController();
+  Usuario _usuario = Usuario.empty();
+
+  @override
+  initState() {
+    super.initState();
+    DataBaseService().getUsuarioLogado().then((result) {
+      _usuario = result;
+      setState(() {});
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -272,14 +284,17 @@ class PerfilAnimalPageState extends State<PerfilAnimalPage> {
             ),
             // Botão que abre uma segunda tela mostrando o perfil do usuário
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => VisualPerfilUsuario()
-                )
-              );
-              // Navigator.pushNamed(context, Rotas.chat);
-              // redirecionar para a rota do chat com o tutor do animal
+              DataBaseService()
+                  .insertInteresse(_usuario.id, widget.animal.id)
+                  .then(
+                    (value) => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            VisualPerfilUsuario(widget.animal.donoId),
+                      ),
+                    ),
+                  );
             },
           ),
         ),

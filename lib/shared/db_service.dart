@@ -68,7 +68,7 @@ class DataBaseService {
 
     int id = await bd.insert("usuario", dados);
 
-    print("Usuário inserido. (ID: $id)");
+    log("Usuário inserido. (ID: $id)");
 
     return id;
   }
@@ -273,10 +273,9 @@ class DataBaseService {
     return interessados;
   }
 
-  Future<List<Interesse>> getInteressesByUserId(int id) async {
+  Future<List<Animal>> getInteressesByUserId(int id) async {
     Database bd = await _getDB();
-    String sql = "SELECT i.id, "
-        "a.id as animalId, "
+    String sql = "SELECT a.id as animalId, "
         "a.nome as animalNome, "
         "a.idade as animalIdade, "
         "a.raca as animalRaca, "
@@ -284,26 +283,17 @@ class DataBaseService {
         "a.caracteristicas as animalCaracteristicas, "
         "a.vacinas as animalVacinas, "
         "a.donoId as animalDonoId, "
-        "u.id as UserId, "
-        "u.nome as UserNome, "
-        "u.email as UserEmail, "
-        "u.imagemPerfil as UserImagemPerfil, "
-        "u.imagemCapa as UserImagemCapa, "
-        "u.apresentacao as UserApresentacao, "
-        "u.password as UserPassword, "
-        "u.latGeo as UserLatGeo, "
-        "u.lonGeo as UserLonGeo, "
-        "u.telefone as UserTelefone "
         "FROM interesse i "
         "INNER JOIN animal a "
         "ON a.id = i.petId "
         "INNER JOIN usuario u "
         "ON u.id = i.interessadoId "
-        "WHERE u.id = $id";
+        "WHERE i.interessadoId = $id";
 
     var response = await bd.rawQuery(sql);
-    var interesses =
-        response.map((interesse) => Interesse.fromMap(interesse)).toList();
+    var interesses = response
+        .map((animalInteresse) => Animal.fromMap(animalInteresse))
+        .toList();
 
     log("Resultado da busca por todos os interesses by userId:");
     inspect(interesses);

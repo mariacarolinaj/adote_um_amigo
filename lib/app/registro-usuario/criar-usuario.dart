@@ -8,7 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../shared/imagem_service.dart';
 
 class RegisterPage extends StatefulWidget {
-  const RegisterPage({Key? key, required this.title}) : super(key: key);
+  const RegisterPage({Key? key, this.title = ''}) : super(key: key);
   final String title;
 
   @override

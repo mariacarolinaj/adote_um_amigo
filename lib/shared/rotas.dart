@@ -8,4 +8,5 @@ class Rotas {
   static const listAnimals = '/lista-animais';
   static const listAnimals2 = '/lista-animais2';
   static const visualPerfilUsuario = '/visual-perfil-usuario';
+  static const animaisInteresse = '/animais-interesse';
 }

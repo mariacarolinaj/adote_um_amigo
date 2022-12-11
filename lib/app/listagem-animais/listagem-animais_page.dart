@@ -199,7 +199,6 @@ class ListagemAnimaisPageState extends State<ListagemAnimaisPage> {
   }
 
   Widget _buildProfileImageAnimal(Animal animal) {
-    print(animal);
     return SizedBox(
       width: MediaQuery.of(context).size.width / 8,
       child: Column(

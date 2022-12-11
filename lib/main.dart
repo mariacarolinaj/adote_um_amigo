@@ -8,6 +8,7 @@ import 'package:adote_um_amigo/shared/style.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'app/cadastro-animal/cadastro-animal_page.dart';
+import 'app/meus-animais/animais-interesse_page.dart';
 import 'app/registro-usuario/login.dart';
 import 'app/registro-usuario/criar-usuario.dart';
 import 'app/perfil-usuario/perfil-usuario_page.dart';
@@ -57,19 +58,21 @@ class MyApp extends StatelessWidget {
           home: pularIntro ? const loginUsuarioPage() : StepForm(),
           routes: <String, WidgetBuilder>{
             Rotas.cadastroAnimal: (BuildContext context) =>
-                const CadastroAnimalPage(title: 'Cadastro de Animal'),
+                const CadastroAnimalPage(),
             Rotas.loginUsuario: (BuildContext context) =>
-                const loginUsuarioPage(title: 'Login de Usuario'),
+                const loginUsuarioPage(),
             Rotas.registroUsuario: (BuildContext context) =>
-                const RegisterPage(title: 'Cadastro de Usuario'),
+                const RegisterPage(),
             Rotas.perfilUsuario: (BuildContext context) =>
-                const PerfilUsuarioPage(title: 'Perfil de usuario'),
+                const PerfilUsuarioPage(),
             Rotas.meusAnimais: (BuildContext context) =>
-                const MeusAnimaisPage(title: 'MeusAnimais'),
+                const MeusAnimaisPage(),
             Rotas.listAnimals: (BuildContext context) =>
-                const ListagemAnimaisPage(title: 'ListaDeAnimais'),
+                const ListagemAnimaisPage(),
             Rotas.listAnimals2: (BuildContext context) =>
-                const ListagemAnimaisPage2(title: 'ListaDeAnimais'),
+                const ListagemAnimaisPage2(),
+            Rotas.animaisInteresse: (BuildContext context) =>
+                const AnimaisInteressePage(),
           },
         );
       },

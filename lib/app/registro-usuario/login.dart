@@ -193,7 +193,7 @@ class loginUsuarioPageState extends State<loginUsuarioPage> {
       );
     } else {
       await _salvarDadosDeSessao(user);
-      Navigator.pushNamed(context, Rotas.listAnimals2);
+      Navigator.pushNamed(context, Rotas.animaisInteresse);
     }
   }
 

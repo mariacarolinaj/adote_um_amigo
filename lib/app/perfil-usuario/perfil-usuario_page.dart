@@ -19,8 +19,7 @@ class PerfilUsuarioPage extends StatefulWidget {
   PerfilUsuarioPageState createState() => PerfilUsuarioPageState();
 }
 
-class PerfilUsuarioPageState extends State<PerfilUsuarioPage>
-{
+class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
   final double coverHeight = 280;
   final double profileHeight = 144;
   Usuario user = Usuario.empty();
@@ -162,7 +161,7 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage>
             'Meus animais de interesse',
             style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
           ),
-          onPressed: () => Navigator.pushNamed(context, Rotas.meusAnimais),
+          onPressed: () => Navigator.pushNamed(context, Rotas.animaisInteresse),
         ),
       );
 
