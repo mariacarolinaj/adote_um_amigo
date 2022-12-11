@@ -1,11 +1,11 @@
 import 'package:adote_um_amigo/app/listagem-animais/listagem-animais_page.dart';
 import 'package:adote_um_amigo/app/listagem-animais/listagem-animais_page2.dart';
 import 'package:adote_um_amigo/app/meus-animais/meus-animais_page.dart';
-import 'package:adote_um_amigo/shared/BarraNavegacaoInferior.dart';
 import 'package:adote_um_amigo/app/tutorial/step_form.dart';
 import 'package:adote_um_amigo/shared/rotas.dart';
 import 'package:adote_um_amigo/shared/style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'app/cadastro-animal/cadastro-animal_page.dart';
 import 'app/meus-animais/animais-interesse_page.dart';
@@ -20,6 +20,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark));
     bool pularIntro = false;
     return FutureBuilder<bool>(
       future: _pularIntro(),
