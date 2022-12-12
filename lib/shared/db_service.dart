@@ -109,9 +109,9 @@ class DataBaseService {
       "interessadoId": interessadoId,
       "petId": petId
     };
-
+    print('interessado $interessadoId petid $petId');
     int interesseId = await bd.insert("interesse", dados);
-
+    print(interesseId);
     log("Interesse inserido. (ID: $interesseId)");
 
     return interesseId;
@@ -275,20 +275,19 @@ class DataBaseService {
 
   Future<List<Animal>> getInteressesByUserId(int id) async {
     Database bd = await _getDB();
-    String sql = "SELECT a.id as animalId, "
-        "a.nome as animalNome, "
-        "a.idade as animalIdade, "
-        "a.raca as animalRaca, "
-        "a.tipo as animalTipo, "
-        "a.caracteristicas as animalCaracteristicas, "
-        "a.vacinas as animalVacinas, "
-        "a.donoId as animalDonoId, "
+    String sql = "SELECT a.id, "
+        "a.nome, "
+        "a.idade, "
+        "a.raca, "
+        "a.tipo, "
+        "a.caracteristicas, "
+        "a.vacinas, "
+        "a.donoId "
         "FROM interesse i "
         "INNER JOIN animal a "
         "ON a.id = i.petId "
         "INNER JOIN usuario u "
-        "ON u.id = i.interessadoId "
-        "WHERE i.interessadoId = $id";
+        "ON u.id = i.interessadoId ";
 
     var response = await bd.rawQuery(sql);
     var interesses = response
@@ -299,6 +298,20 @@ class DataBaseService {
     inspect(interesses);
 
     return interesses;
+  }
+
+  Future<bool> checkInteresseExistente(int userId, int petId) async {
+    Database bd = await _getDB();
+    String sql = "SELECT a.id "
+        "FROM interesse i "
+        "INNER JOIN animal a "
+        "ON a.id = i.petId "
+        "INNER JOIN usuario u "
+        "ON u.id = i.interessadoId "
+        "WHERE i.petId = $petId AND i.interessadoId = $userId";
+
+    var response = await bd.rawQuery(sql);
+    return response.isNotEmpty;
   }
 
   Future<List<String>> getFotosByAnimalId(int id) async {

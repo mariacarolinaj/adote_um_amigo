@@ -20,7 +20,7 @@ class PerfilUsuarioPage extends StatefulWidget {
 }
 
 class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
-  final double coverHeight = 280;
+  final double coverHeight = 240;
   final double profileHeight = 144;
   Usuario user = Usuario.empty();
 

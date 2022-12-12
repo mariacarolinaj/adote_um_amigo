@@ -104,7 +104,7 @@ class _AnimaisInteressePageState extends State<AnimaisInteressePage> {
               isScrollControlled: true,
               context: context,
               builder: (BuildContext context) {
-                return PerfilAnimalPage(animal, true);
+                return PerfilAnimalPage(animal, false);
               },
             );
           },

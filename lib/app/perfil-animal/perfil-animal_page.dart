@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:adote_um_amigo/models/animal.dart';
 import 'package:adote_um_amigo/models/usuario.dart';
@@ -25,12 +26,21 @@ class PerfilAnimalPage extends StatefulWidget {
 class PerfilAnimalPageState extends State<PerfilAnimalPage> {
   final CarouselController _buttonCarouselController = CarouselController();
   Usuario _usuario = Usuario.empty();
+  bool _interesseSalvo = false;
 
   @override
   initState() {
     super.initState();
     DataBaseService().getUsuarioLogado().then((result) {
       _usuario = result;
+      setState(() {});
+    });
+    DataBaseService()
+        .checkInteresseExistente(_usuario.id, widget.animal.id)
+        .then((value) {
+      inspect(value);
+      _interesseSalvo = value;
+      // inspect(_interesseSalvo);
       setState(() {});
     });
   }
@@ -52,12 +62,14 @@ class PerfilAnimalPageState extends State<PerfilAnimalPage> {
                       children: <Widget>[
                         _buildCarouselFotos(),
                         _buildSecaoInicial(),
-                        _buildCardDistancia(),
+                        // _buildCardDistancia(),
                         _buildInformacoes(),
+                        if (!widget.exibicaoDoDono && !_interesseSalvo)
+                          _buildButtonSalvar(),
+                        if (!widget.exibicaoDoDono) _buildButtonContato(),
                       ],
                     ),
                   ),
-                  if (!widget.exibicaoDoDono) _buildButton(),
                   _buildButtonVoltar(),
                 ],
               ),
@@ -227,7 +239,7 @@ class PerfilAnimalPageState extends State<PerfilAnimalPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _getTextInfoValor("${widget.animal.idade} anos"),
-                    _getTextInfoValor('Belo Horizonte'),
+                    // _getTextInfoValor('Belo Horizonte'),
                     _getTextInfoValor(widget.animal.vacinas)
                   ],
                 ),
@@ -265,7 +277,40 @@ class PerfilAnimalPageState extends State<PerfilAnimalPage> {
     );
   }
 
-  Widget _buildButton() {
+  Widget _buildButtonContato() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 0.0, bottom: 16),
+        child: SizedBox(
+          width: 300,
+          height: 50,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Cores.primaria,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0)),
+            child: const Text(
+              'Perfil e contatos do tutor',
+              style: TextStyle(fontSize: 16),
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      VisualPerfilUsuario(widget.animal.donoId),
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildButtonSalvar() {
     return Center(
       child: Padding(
         padding: const EdgeInsets.only(top: 32.0, bottom: 16),
@@ -280,22 +325,19 @@ class PerfilAnimalPageState extends State<PerfilAnimalPage> {
               ),
             ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0)),
             child: const Text(
-              'Tenho interesse',
+              'Salvar interesse',
               style: TextStyle(fontSize: 16),
             ),
             // Botão que abre uma segunda tela mostrando o perfil do usuário
             onPressed: () {
               DataBaseService()
                   .insertInteresse(_usuario.id, widget.animal.id)
-                  .then(
-                    (value) => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            VisualPerfilUsuario(widget.animal.donoId),
-                      ),
-                    ),
-                  );
+                  .then((value) {
+                const snackBar = SnackBar(
+                  content: Text('Interesse salvo com sucesso'),
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              });
             },
           ),
         ),
@@ -306,7 +348,7 @@ class PerfilAnimalPageState extends State<PerfilAnimalPage> {
   Widget _buildButtonVoltar() {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.only(bottom: 8.0),
+        padding: const EdgeInsets.only(bottom: 16.0),
         child: SizedBox(
           width: 300,
           height: 30,
