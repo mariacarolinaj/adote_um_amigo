@@ -28,30 +28,25 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
   Usuario user = Usuario.empty();
 
   @override
-  initState() {
-    super.initState();
+  void initState() {
     DataBaseService().getUsuarioLogado().then((result) {
       user = result;
+      _methodToPrint();
       setState(() {});
     });
+
+    super.initState();
   }
 
   void _searchCep(String cep) async {
     final resultCep = await ViaCepService.fetchCep(cep);
     print(resultCep.localidade); // Exibindo somente a localidade no terminal
-    setState(() {
-      _resultCep = resultCep.localidade;
-    });
+    _resultCep = resultCep.localidade;
   }
 
   void _methodToPrint() {
-    print(user.nome);
-    print('LatGeo');
-    print(user.latGeo);
     int toInt = user.latGeo.toInt();
     String toString = toInt.toString();
-    print('Value to String');
-    print(toString);
     _searchCep(toString);
   }
 
@@ -72,7 +67,6 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
   Widget buildTop() {
     final bottom = profileHeight / 2;
     final top = coverHeight - profileHeight / 2;
-    _methodToPrint();
 
     return Stack(
       clipBehavior: Clip.none,
