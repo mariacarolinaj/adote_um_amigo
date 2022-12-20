@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 
 import '../../shared/style.dart';
 import '../visual-perfil-usuario/visual-perfil-usuario.dart';
+import 'package:adote_um_amigo/models/result_cep.dart';
+import 'package:adote_um_amigo/service/via_cep_service.dart';
 
 class PerfilAnimalPage extends StatefulWidget {
   final String title;
@@ -27,12 +29,14 @@ class PerfilAnimalPageState extends State<PerfilAnimalPage> {
   final CarouselController _buttonCarouselController = CarouselController();
   Usuario _usuario = Usuario.empty();
   bool _interesseSalvo = false;
+  String _resultCep = '';
 
   @override
   initState() {
     super.initState();
     DataBaseService().getUsuarioLogado().then((result) {
       _usuario = result;
+      _methodToPrint();
       setState(() {});
     });
     DataBaseService()
@@ -43,6 +47,19 @@ class PerfilAnimalPageState extends State<PerfilAnimalPage> {
       // inspect(_interesseSalvo);
       setState(() {});
     });
+  }
+
+  void _searchCep(String cep) async {
+    final resultCep = await ViaCepService.fetchCep(cep);
+    print(resultCep.localidade); // Exibindo somente a localidade no terminal
+    _resultCep = resultCep.localidade;
+    setState(() {});
+  }
+
+  void _methodToPrint() {
+    int toInt = _usuario.latGeo.toInt();
+    String toString = toInt.toString();
+    _searchCep(toString);
   }
 
   @override
@@ -239,7 +256,7 @@ class PerfilAnimalPageState extends State<PerfilAnimalPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _getTextInfoValor("${widget.animal.idade} anos"),
-                    // _getTextInfoValor('Belo Horizonte'),
+                    _getTextInfoValor(_resultCep),
                     _getTextInfoValor(widget.animal.vacinas)
                   ],
                 ),
