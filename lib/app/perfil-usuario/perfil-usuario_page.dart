@@ -42,6 +42,7 @@ class PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
     final resultCep = await ViaCepService.fetchCep(cep);
     print(resultCep.localidade); // Exibindo somente a localidade no terminal
     _resultCep = resultCep.localidade;
+    setState(() {});
   }
 
   void _methodToPrint() {
